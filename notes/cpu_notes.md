@@ -202,7 +202,80 @@ Things to brush up on:
 
 - getopt
 
+Let's make another pass at `main` and see if I can tighten it up a little. 
 
+```
+#define RAM_SIZE 256
+#define CLK_FREQ 1
+
+
+// Struct definitions
+struct register_struct {
+    char instruction;   // Instruction register
+    char accum;         // Accumulator
+    char mar;           // Memory address register
+    char index;         // Index register
+    char gp;            // General purpose register
+    char pc;            // Program counter
+    char status;        // Status register
+    char sp;            // Stack pointer
+};
+
+struct cli_struct {
+    char **input_file;
+};
+
+// Function definitions
+struct register_struct *init_register_struct(struct register_struct *registers);
+struct cli_struct *parse_cli(int argc, char **argv);
+int load_ram(char *ram, struct cli_struct *cli);
+char get_next_byte(char *ram, char pc);
+int execute_instruction(char instruction, char pc1, char pc2);
+
+
+int main(int argc, char **argv)
+{
+    char ram[RAM_SIZE];
+    char *p_ram = ram;
+    struct register_struct regis;
+    struct register_struct *p_regis = &regis;
+    struct cli_struct cli_args;
+    struct cli_struct *p_cli_args = &cli_args;
+
+    // Initialization
+    p_regis = init_register_struct(p_regis);
+    cli_args = parse_cli(argc, argv);
+    load_ram(ram, p_cli_args);
+    
+    // Run instructions
+    while (1) {
+        // Fetch instruction
+        if (p_regis->instruction == NULL) {
+            p_regis->instruction = get_next_byte(ram, p_regis->pc);
+            p_regis->pc++;
+        } 
+        
+        // Fetch next two bytes
+        else {
+            execute_instruction(p_regis->instruction, pc, pc+1);
+            p_regis->instruction = NULL;
+            p_regis->pc += 2;
+            sleep(1 / CLK_FREQ);
+        }
+        
+    }
+    
+}
+```
+
+I'll define my own unsigned character type, which should have a size of 1 byte
+regardless of the architecture. Anyway, I think this is looking very good. I
+have inputs and returns for the main functions, and the flow of information
+looks natural enough. 
+
+There's plenty of work left to do. At no point do I check the status register,
+for example. Also, there's generally no error checking here. Each function will
+itself be made of many different functions, too, so I'll have to manage that. 
 
 
 ---
