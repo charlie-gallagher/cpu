@@ -280,10 +280,7 @@ itself be made of many different functions, too, so I'll have to manage that.
 
 Note that I also added a `print_ram` function and a `print_io` function. The
 former prints the contents of RAM as hex values (a hex dump); the latter prints
-the contents of the input output section of memory as ASCII text. The `IO_START`
-constant says where in memory the "screen" contents are. This will have to be
-initialized when the memory is initialized; I think setting everything to `\0`
-will be fine. 
+the contents of the input output section of memory as ASCII text. 
 
 
 ---
