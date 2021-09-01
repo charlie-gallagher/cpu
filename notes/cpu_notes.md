@@ -204,7 +204,7 @@ Things to brush up on:
 
 Let's make another pass at `main` and see if I can tighten it up a little. 
 
-```
+```c
 #define RAM_SIZE 256
 #define CLK_FREQ 1
 
@@ -260,11 +260,12 @@ int main(int argc, char **argv)
             execute_instruction(p_regis->instruction, pc, pc+1);
             p_regis->instruction = NULL;
             p_regis->pc += 2;
+            print_ram(ram);
+            print_io(ram, IO_START);
             sleep(1 / CLK_FREQ);
         }
         
     }
-    
 }
 ```
 
@@ -276,6 +277,13 @@ looks natural enough.
 There's plenty of work left to do. At no point do I check the status register,
 for example. Also, there's generally no error checking here. Each function will
 itself be made of many different functions, too, so I'll have to manage that. 
+
+Note that I also added a `print_ram` function and a `print_io` function. The
+former prints the contents of RAM as hex values (a hex dump); the latter prints
+the contents of the input output section of memory as ASCII text. The `IO_START`
+constant says where in memory the "screen" contents are. This will have to be
+initialized when the memory is initialized; I think setting everything to `\0`
+will be fine. 
 
 
 ---
