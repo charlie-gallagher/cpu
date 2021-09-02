@@ -62,19 +62,23 @@ int main(int argc, char **argv)
 		printf("Program counter: %d\n", p_regis->pc);
 
 		// Fetch instruction
-		if (p_regis->instruction == -1) {
+		if (p_regis->instruction == INSTRUCT_PASS) {
 			printf("Instruction cycle\n");
 			p_regis->instruction = get_next_byte(ram, p_regis->pc);
+			printf("Instruction: %d\n", p_regis->instruction);
 			p_regis->pc++;
 		} 
 
 		// Fetch next two bytes
 		else {
 			printf("Execution cycle\n");
-			execute_instruction(p_regis->instruction, 
+			if (execute_instruction(p_regis->instruction, 
 					p_regis->pc, 
 					p_regis,
-					ram);
+					ram) == HLT) {
+				printf("Halting!\n");
+				break;
+			}
 			p_regis->instruction = INSTRUCT_PASS;
 			p_regis->pc += 2;
 			printf("Accumulator: %d\n", p_regis->accum);

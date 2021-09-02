@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "main.h"
 #include "opcodes.h"
 /* Opcode execution
@@ -28,6 +29,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case LDA_M: 
 		{
+			printf("Loading accumulator (immediate)\n");
+			printf("Memory value: %d\n", ram[pc1]);
 		    	registers->accum = ram[pc1];
 			break;
 		}
@@ -45,6 +48,16 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			ram[ram[pc1 + registers->index]] = registers->accum;
 			break;
+		}
+		case HLT:
+		{
+			printf("Halting execution\n");
+			return HLT;
+		}
+		default: 
+		{
+			fprintf(stderr, "Execution error: Unknown instruction\n");
+			return -1;
 		}
 	}
 

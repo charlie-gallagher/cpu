@@ -36,7 +36,6 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 #define JMP_D 27
 #define JMP_I 28
 #define JMP_M 29
-#define HLT 30
-#define HLT 30
+#define HLT 0
 
 #endif
