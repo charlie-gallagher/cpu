@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define RAM_SIZE 256
 #define CLK_FREQ 1
@@ -26,6 +27,11 @@ struct cli_struct {
 struct register_struct *init_register_struct(struct register_struct *registers);
 struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv);
 int load_ram(char ram[], struct cli_struct *cli);
+void print_ram(char ram[]);
+void print_io(char ram[]);
+
+char get_next_byte(char *ram, char pc);
+int execute_instruction(char instruction, char pc1, char pc2);
 
 
 int main(int argc, char **argv)
@@ -70,19 +76,58 @@ int main(int argc, char **argv)
 	for (i = 0; i < RAM_SIZE; i++) {
 		printf("%d ", ram[i]);
 		
-		if (i % 10 == 9) {
+		if (i % 16 == 15) {
 			putchar('\n');
 		}
 	}
 	putchar('\n');
+
+
+
+	while (1) {
+		// Fetch instruction
+		if (p_regis->instruction == -1) {
+			printf("Instruction cycle\n");
+			p_regis->instruction = get_next_byte(ram, p_regis->pc);
+			p_regis->pc++;
+		} 
+
+		// Fetch next two bytes
+		else {
+			printf("Execution cycle\n");
+			execute_instruction(p_regis->instruction, 
+					p_regis->pc, 
+					p_regis->pc+1);
+			p_regis->instruction = -1;
+			p_regis->pc += 2;
+			print_ram(ram);
+
+			printf("I/O Print\n------\n");
+			print_io(ram);
+			printf("Sleeping for 1 second...\n");
+			sleep(1 / CLK_FREQ);
+		}
+
+	}
     
     return 0;
 }
 
 
+
+
+
+
+
+/* Initialize register struct
+ *
+ * 	registers	Register struct pointer
+ *
+ * Returns a pointer to the register struct 
+ */
 struct register_struct *init_register_struct(struct register_struct *registers)
 {
-	registers->instruction = NULL;
+	registers->instruction = -1;
 	registers->accum = 0;
 	registers->mar = 0;
 	registers->index = 0;
@@ -95,6 +140,14 @@ struct register_struct *init_register_struct(struct register_struct *registers)
 }
 
 
+/* Parse command line
+ *
+ * 	cl_args		Pointer to command line struct
+ * 	argc		argc
+ * 	argv		argv
+ *
+ * Returns a pointer to the command line struct
+ */
 struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv)
 {
 	if (argc != 2) {
@@ -108,6 +161,11 @@ struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv)
 }
 
 
+/* Load ram
+ *
+ * 	ram		Memory array acting as RAM
+ * 	cli		Pointer to command line struct
+ */
 int load_ram(char ram[], struct cli_struct *cli)
 {
 	/* Temporarily, going to ignore the struct and 
@@ -121,3 +179,50 @@ int load_ram(char ram[], struct cli_struct *cli)
 
 	return 0;
 }
+
+
+/* Print RAM array
+ */
+void print_ram(char ram[])
+{
+	int i;
+	for (i = 0; i < RAM_SIZE; i++) {
+		printf("%d ", ram[i]);
+		
+		if (i % 16 == 15) {
+			putchar('\n');
+		}
+	}
+	putchar('\n');
+}
+
+/* Print IO array
+ */
+void print_io(char ram[])
+{
+	int i;
+
+	printf("I/O device printing...\n");
+	for (i = IO_START; i < RAM_SIZE; i++) {
+		printf("%d ", ram[i]);
+		
+		if (i % 16 == 15) {
+			putchar('\n');
+		}
+	}
+	putchar('\n');
+}
+
+
+char get_next_byte(char *ram, char pc)
+{
+	return ram[pc];
+}
+
+int execute_instruction(char instruction, char pc1, char pc2)
+{
+	return 0;
+}
+
+
+
