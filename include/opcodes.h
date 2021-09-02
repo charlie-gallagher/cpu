@@ -13,10 +13,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 #define LDA_D 4
 #define LDA_I 5
 #define LDA_M 6
-#define STX_D 7
-#define STX_I 8
 #define LDX_D 9
-#define LDX_I 10
+#define LDX_M 10
 #define INC_D 11
 #define INC_I 12
 #define DEC_D 13
@@ -36,6 +34,9 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 #define JMP_D 27
 #define JMP_I 28
 #define JMP_M 29
+#define INCX 30
+#define DECX 31
+#define JMP 32
 #define HLT 0
 
 #endif

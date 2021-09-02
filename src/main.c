@@ -44,8 +44,42 @@ int main(int argc, char **argv)
 
 	printf("\n\n");
 
+
+
+	/* Load RAM and registers with some phony stuff */
+	ram[0] = LDA_M;
+	ram[1] = 10;
+	ram[2] = STA_D;
+	ram[3] = 90;
+	ram[4] = LDX_M;
+	ram[5] = 0;
+	// Unconditional loop to print "Hello" in IO
+	ram[6] = LDA_I;
+	ram[7] = 20;
+	ram[8] = STA_I;
+	ram[9] = IO_START;
+	ram[10] = INCX;
+	ram[11] = 0; // No-op for fixed width instruction with no operand
+	ram[12] = JMP;
+	ram[13] = 6;
+	
+	// Hello
+	ram[20] = 'h';
+	ram[21] = 'e';
+	ram[22] = 'l';
+	ram[23] = 'l';
+	ram[24] = 'o';
+	ram[25] = ' ';
+	ram[26] = 'w';
+	ram[27] = 'o';
+	ram[28] = 'r';
+	ram[29] = 'l';
+	ram[30] = 'd';
+	ram[31] = '!';
+
+
     	// ram
-	printf("Testing RAM\n------\n");
+	printf("Loaded RAM\n------\n");
 	for (i = 0; i < RAM_SIZE; i++) {
 		printf("%d ", ram[i]);
 		
@@ -55,9 +89,8 @@ int main(int argc, char **argv)
 	}
 	putchar('\n');
 
-
-
 	while (1) {
+		int halt_flag = 0;
 
 		printf("Program counter: %d\n", p_regis->pc);
 
@@ -72,27 +105,46 @@ int main(int argc, char **argv)
 		// Fetch next two bytes
 		else {
 			printf("Execution cycle\n");
-			if (execute_instruction(p_regis->instruction, 
+			halt_flag = execute_instruction(p_regis->instruction, 
 					p_regis->pc, 
 					p_regis,
-					ram) == HLT) {
-				printf("Halting!\n");
-				break;
-			}
+					ram);
 			p_regis->instruction = INSTRUCT_PASS;
-			p_regis->pc += 2;
+			p_regis->pc++;
+
+
 			printf("Accumulator: %d\n", p_regis->accum);
-			print_ram(ram);
+			printf("Index: %d\n", p_regis->index);
+
 
 			printf("I/O Print\n------\n");
 			print_io(ram);
+
+			if (halt_flag == 1) {
+				printf("Halting!\n");
+				break;
+			} else if (halt_flag == -1) {
+				break;
+			}
+
 			printf("Sleeping for 1 second...\n");
 			sleep(1 / CLK_FREQ);
 		}
 
 	}
+
+
+	printf("Final RAM dump\n------\n");
+	for (i = 0; i < RAM_SIZE; i++) {
+		printf("%d ", ram[i]);
+		
+		if (i % 16 == 15) {
+			putchar('\n');
+		}
+	}
+	putchar('\n');
     
-    return 0;
+	return 0;
 }
 
 
@@ -159,10 +211,6 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 		ram[i] = 0;
 	}
 
-	/* Temporarily load some phony instructions */
-	ram[0] = LDA_M;
-	ram[1] = 55;
-
 	return 0;
 }
 
@@ -190,12 +238,13 @@ void print_io(unsigned char ram[])
 
 	printf("I/O device printing...\n");
 	for (i = IO_START; i < RAM_SIZE; i++) {
-		printf("%d ", ram[i]);
+		printf("%c", ram[i]);
 		
-		if (i % 16 == 15) {
+		if (i % 20 == 79) {
 			putchar('\n');
 		}
 	}
+	putchar('\n');
 	putchar('\n');
 }
 
