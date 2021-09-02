@@ -1,0 +1,62 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ADD_D	include/opcodes.h	28;"	d
+ADD_I	include/opcodes.h	29;"	d
+AND_D	include/opcodes.h	32;"	d
+AND_I	include/opcodes.h	33;"	d
+CLK_FREQ	include/main.h	5;"	d
+CMP_D	include/opcodes.h	24;"	d
+CMP_I	include/opcodes.h	25;"	d
+DEC_D	include/opcodes.h	22;"	d
+DEC_I	include/opcodes.h	23;"	d
+HLT	include/opcodes.h	39;"	d
+HLT	include/opcodes.h	40;"	d
+INC_D	include/opcodes.h	20;"	d
+INC_I	include/opcodes.h	21;"	d
+INSTRUCT_PASS	include/main.h	7;"	d
+IO_START	include/main.h	6;"	d
+JEQ	include/opcodes.h	26;"	d
+JMP_D	include/opcodes.h	36;"	d
+JMP_I	include/opcodes.h	37;"	d
+JMP_M	include/opcodes.h	38;"	d
+JNQ	include/opcodes.h	27;"	d
+LDA_D	include/opcodes.h	13;"	d
+LDA_I	include/opcodes.h	14;"	d
+LDA_M	include/opcodes.h	15;"	d
+LDX_D	include/opcodes.h	18;"	d
+LDX_I	include/opcodes.h	19;"	d
+MAIN_CPU	include/main.h	3;"	d
+OPCODES	include/opcodes.h	5;"	d
+OR_D	include/opcodes.h	34;"	d
+OR_I	include/opcodes.h	35;"	d
+RAM_SIZE	include/main.h	4;"	d
+STA_D	include/opcodes.h	10;"	d
+STA_I	include/opcodes.h	11;"	d
+STA_M	include/opcodes.h	12;"	d
+STX_D	include/opcodes.h	16;"	d
+STX_I	include/opcodes.h	17;"	d
+SUB_D	include/opcodes.h	30;"	d
+SUB_I	include/opcodes.h	31;"	d
+accum	include/main.h	/^    unsigned char accum;   	\/\/ Accumulator$/;"	m	struct:register_struct
+cli_struct	include/main.h	/^struct cli_struct {$/;"	s
+execute_instruction	src/opcodes.c	/^int execute_instruction(char instruction, char pc1, $/;"	f
+get_next_byte	src/main.c	/^char get_next_byte(unsigned char *ram, unsigned char pc)$/;"	f
+gp	include/main.h	/^    unsigned char gp;            \/\/ General purpose register$/;"	m	struct:register_struct
+index	include/main.h	/^    unsigned char index;         \/\/ Index register$/;"	m	struct:register_struct
+init_register_struct	src/main.c	/^struct register_struct *init_register_struct(struct register_struct *registers)$/;"	f
+input_file	include/main.h	/^    char *input_file;$/;"	m	struct:cli_struct
+instruction	include/main.h	/^    unsigned char instruction;   \/\/ Instruction register$/;"	m	struct:register_struct
+load_ram	src/main.c	/^int load_ram(unsigned char ram[], struct cli_struct *cli)$/;"	f
+main	src/main.c	/^int main(int argc, char **argv)$/;"	f
+mar	include/main.h	/^    unsigned char mar;           \/\/ Memory address register$/;"	m	struct:register_struct
+parse_cli	src/main.c	/^struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv)$/;"	f
+pc	include/main.h	/^    unsigned char pc;            \/\/ Program counter$/;"	m	struct:register_struct
+print_io	src/main.c	/^void print_io(unsigned char ram[])$/;"	f
+print_ram	src/main.c	/^void print_ram(unsigned char ram[])$/;"	f
+register_struct	include/main.h	/^struct register_struct {$/;"	s
+sp	include/main.h	/^    unsigned char sp;            \/\/ Stack pointer$/;"	m	struct:register_struct
+status	include/main.h	/^    unsigned char status;        \/\/ Status register$/;"	m	struct:register_struct

@@ -1,42 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#define RAM_SIZE 256
-#define CLK_FREQ 1
-#define IO_START 200
+#include "main.h"
+#include "opcodes.h"
 
 
-// Struct definitions
-struct register_struct {
-    char instruction;   // Instruction register
-    char accum;         // Accumulator
-    char mar;           // Memory address register
-    char index;         // Index register
-    char gp;            // General purpose register
-    char pc;            // Program counter
-    char status;        // Status register
-    char sp;            // Stack pointer
-};
-
-struct cli_struct {
-    char *input_file;
-};
-
-// Function definitions
-struct register_struct *init_register_struct(struct register_struct *registers);
-struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv);
-int load_ram(char ram[], struct cli_struct *cli);
-void print_ram(char ram[]);
-void print_io(char ram[]);
-
-char get_next_byte(char *ram, char pc);
-int execute_instruction(char instruction, char pc1, char pc2);
 
 
 int main(int argc, char **argv)
 {
-    	char ram[RAM_SIZE];
+    	unsigned char ram[RAM_SIZE];
     	struct register_struct regis;
     	struct register_struct *p_regis = &regis;
     	struct cli_struct cli_args;
@@ -85,6 +58,9 @@ int main(int argc, char **argv)
 
 
 	while (1) {
+
+		printf("Program counter: %d\n", p_regis->pc);
+
 		// Fetch instruction
 		if (p_regis->instruction == -1) {
 			printf("Instruction cycle\n");
@@ -97,9 +73,11 @@ int main(int argc, char **argv)
 			printf("Execution cycle\n");
 			execute_instruction(p_regis->instruction, 
 					p_regis->pc, 
-					p_regis->pc+1);
-			p_regis->instruction = -1;
+					p_regis,
+					ram);
+			p_regis->instruction = INSTRUCT_PASS;
 			p_regis->pc += 2;
+			printf("Accumulator: %d\n", p_regis->accum);
 			print_ram(ram);
 
 			printf("I/O Print\n------\n");
@@ -127,7 +105,7 @@ int main(int argc, char **argv)
  */
 struct register_struct *init_register_struct(struct register_struct *registers)
 {
-	registers->instruction = -1;
+	registers->instruction = INSTRUCT_PASS;
 	registers->accum = 0;
 	registers->mar = 0;
 	registers->index = 0;
@@ -166,7 +144,7 @@ struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv)
  * 	ram		Memory array acting as RAM
  * 	cli		Pointer to command line struct
  */
-int load_ram(char ram[], struct cli_struct *cli)
+int load_ram(unsigned char ram[], struct cli_struct *cli)
 {
 	/* Temporarily, going to ignore the struct and 
 	 * load ram with all zeros
@@ -177,13 +155,17 @@ int load_ram(char ram[], struct cli_struct *cli)
 		ram[i] = 0;
 	}
 
+	/* Temporarily load some phony instructions */
+	ram[0] = LDA_M;
+	ram[1] = 55;
+
 	return 0;
 }
 
 
 /* Print RAM array
  */
-void print_ram(char ram[])
+void print_ram(unsigned char ram[])
 {
 	int i;
 	for (i = 0; i < RAM_SIZE; i++) {
@@ -198,7 +180,7 @@ void print_ram(char ram[])
 
 /* Print IO array
  */
-void print_io(char ram[])
+void print_io(unsigned char ram[])
 {
 	int i;
 
@@ -214,15 +196,11 @@ void print_io(char ram[])
 }
 
 
-char get_next_byte(char *ram, char pc)
+char get_next_byte(unsigned char *ram, unsigned char pc)
 {
 	return ram[pc];
 }
 
-int execute_instruction(char instruction, char pc1, char pc2)
-{
-	return 0;
-}
 
 
 

@@ -282,6 +282,30 @@ Note that I also added a `print_ram` function and a `print_io` function. The
 former prints the contents of RAM as hex values (a hex dump); the latter prints
 the contents of the input output section of memory as ASCII text. 
 
+### Steps
+I've implemented the code above in C, with some extra bits for testing.
+Everything's working right at the moment, which is honestly really exciting.
+Now, I just need to write everything else that goes with the program. 
+
+The good news is, I don't need to dynamically allocate any memory, since all
+sizes are known in advance. That's great. I still need to: 
+
+- Read the file and write it to "memory" (ram array)
+- Decide on actual op-codes and implement each one
+  - And figure out the structure of this part of the program to boot
+
+I guess that's really it. Getting the instructions to work is a priority,
+followed by reading the file and parsing the command line with any options I
+want to add. Will I allow any options? One option should be to run an example
+program. 
+
+First, op-codes, second, example, and third reading any file from the user. 
+
+### Op-codes
+I've started a Google Sheet with all the instructions I want to support. See
+that for more information. As this develops I might incorporate more
+instructions, but I have 32 as it is, and that's a lotta switch statments. 
+
 
 ---
 
