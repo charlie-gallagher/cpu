@@ -12,9 +12,13 @@
  */
 int load_ram(unsigned char ram[], struct cli_struct *cli)
 {
-	char contents[RAM_SIZE];
 	FILE *fp;
 	int i, c;
+
+	/* Initialize RAM array */
+	for (i = 0; i < RAM_SIZE; i++) {
+		ram[i] = 0;
+	}
 
 	printf("Loading file\n");
 
@@ -29,13 +33,14 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 	i = 0;
 	while (i < RAM_SIZE) {
 		printf("READING FILE: line %d\n", i);
-		if (read_assembly_line(contents, i, fp) == 1) {
+		if (read_assembly_line(ram, i, fp) == 1) {
 			printf("Aborting file read early -- not 256 lines\n");
 			break;
 		}
-		printf("Byte: %d\n", contents[i]);
+		printf("Byte: %d\n", ram[i]);
 		i++;
 	}
+
 
 	fclose(fp);
 	return 0;
@@ -47,7 +52,7 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
  * Only takes at most 5 characters from each line
  * Reads a line into the contents array
  */
-int read_assembly_line(char byte[], int i, FILE *fp)
+int read_assembly_line(char ram[], int i, FILE *fp)
 {
 	char line[80];
 	int c, byte_code;
@@ -69,6 +74,8 @@ int read_assembly_line(char byte[], int i, FILE *fp)
 		fprintf(stderr, "Error parsing commands\n");
 		exit(1);
 	}
+
+	ram[i] = byte_code;
 
 	if (feof(fp) != 0) {
 		printf("End of file reached\n");
@@ -141,8 +148,12 @@ int parse_line(char *line)
 		return DECX;
 	} else if (strcmp(line, "HLT") == 0) {
 		return HLT;
-	} else if (atoi(line) != 0 || line[1] == '0') {
+	} else if (strcmp(line, "IO_START") == 0) {
+		return IO_START;
+	} else if (line[0] == '0' || atoi(line) != 0) {
 		return atoi(line);
+	} else if (line[0] == '\0') {
+		return 0;
 	} else {
 		return -1;
 	}

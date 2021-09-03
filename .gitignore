@@ -1,4 +1,4 @@
 cpu
 *.o
 tags
-
+*swp*

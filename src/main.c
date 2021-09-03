@@ -22,10 +22,8 @@ int main(int argc, char **argv)
 		exit(-1);
 	}
 	load_ram(ram, p_cli_args);
+	print_ram(ram);
 
-	#ifdef DEBUG
-	/* Test */
-	int i; 
 
     	// registers
 	printf("Testing registers\n------\n");
@@ -40,56 +38,6 @@ int main(int argc, char **argv)
 
 	printf("\n\n");
 
-    	// CLI
-	printf("Testing CLI\n------\n");
-	printf("Filename: %s\n", p_cli_args->input_file);
-
-	printf("\n\n");
-
-
-
-	/* Load RAM and registers with some phony stuff */
-	ram[0] = LDA_M;
-	ram[1] = 10;
-	ram[2] = STA_D;
-	ram[3] = 90;
-	ram[4] = LDX_M;
-	ram[5] = 13;
-	// Conditional loop
-	ram[6] = LDA_I;
-	ram[7] = 20;
-	ram[8] = STA_I;
-	ram[9] = IO_START;
-	ram[10] = DECX;
-	ram[11] = 0; // No-op for fixed width instruction with no operand
-	ram[12] = JNE;
-	ram[13] = 6;
-	
-	// Hello
-	ram[20] = 'B';
-	ram[21] = 'r';
-	ram[22] = 'e';
-	ram[23] = 'l';
-	ram[24] = 'y';
-	ram[25] = 'n';
-	ram[26] = 'n';
-	ram[27] = ' ';
-	ram[28] = 'H';
-	ram[29] = 'e';
-	ram[30] = 's';
-	ram[31] = 's';
-
-
-    	// ram
-	printf("Loaded RAM\n------\n");
-	for (i = 0; i < RAM_SIZE; i++) {
-		printf("%d ", ram[i]);
-		
-		if (i % 16 == 15) {
-			putchar('\n');
-		}
-	}
-	putchar('\n');
 
 	while (1) {
 		int halt_flag = 0;
@@ -141,15 +89,7 @@ int main(int argc, char **argv)
 
 
 	printf("Final RAM dump\n------\n");
-	for (i = 0; i < RAM_SIZE; i++) {
-		printf("%d ", ram[i]);
-		
-		if (i % 16 == 15) {
-			putchar('\n');
-		}
-	}
-	putchar('\n');
-	#endif
+	print_ram(ram);
     
 	return 0;
 }
