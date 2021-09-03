@@ -4,11 +4,17 @@ frequecy with the `CLK_FREQ` constant defined in `main.h` -- it's given in Hz.
 For watching instructions, something like 1 or 2 is fun, but pretty painfully
 slow. 
 
-I recently implemented the zero flag, so it might not behave perfectly. I have
-one unconditional `JMP` instruction and two conditional jumps (`JEQ` and `JNE`).
-I also have implemented loading and storing the accumulator and the index
-register. See `opcodes.c` for a full list of implemented opcodes, and
-`opcodes.h` for the constant definitions for all opcodes I plan on implementing.
+See `opcodes.c` for a full list of implemented opcodes, and `opcodes.h` for the
+constant definitions for all opcodes I plan on implementing.
+
+I just implemented a very basic assembler so you don't have to know the opcodes
+to use the CPU. It recognizes all of the opcodes and some symbolic constants
+like `IO_START`, which is the section of memory that prints after each clock
+cycle. 
+
+In progress: 
+
+- Code comments
 
 
 
@@ -23,16 +29,16 @@ gcc -I include -o cpu src/*.c
 ```
 
 ### Example
-Although I haven't implemented an input file, the program expects an argument
-when you call it. 
+I've included a test file, which is the best way to run this for the first time
+so you know what to expect. 
 
 ```
-./cpu file
+./cpu test/test_file.txt
 ```
 
-`file` doesn't have to exist (yet). The default bytes will print "relynn Hess"
-(thanks to an off-by-one error) to the "output" device, and it runs at something
-like 2 Hz. 
+This will write "Brelynn Hess" to the pseudo-IO device, which is nothing more
+than a block of memory reserved for such purposes. 
+
 
 ---
 
