@@ -1,11 +1,28 @@
 # Virtual CPU
-This is a pretty informal project I thought up to keep my C skills sharp. I'm
-going to build a virtual CPU, painfully simple and using no external libraries.
-At the moment, the plan is to support a few commands, focus on the data
-structures, and force the poor user to write raw op codes to populate the CPU's
-128 byte memory. See my notes document for some of my current ideas. The CPU
-will be based on the Motorolla 6502, since that's the architecture I'm most
-familiar with. 
+This is a quick, informal project emulating a processor. At this point, I
+haven't implemented some important features, like the status register or
+allowing the user to pass in an input file. I'm manually initializing the memory
+array in the `main` function, and I've only written a few opcodes. Still, it's
+fun. 
+
+### Compile
+This program depends on the `unistd.h` header file, so it can't be compiled on
+Windows. 
+
+
+```
+gcc -I include -o cpu src/*.c
+```
+
+### Example
+Although I haven't implemented an input file, the program expects an argument
+when you call it. 
+
+```
+./cpu file
+```
+
+`file` doesn't have to exist (yet). 
 
 ---
 
