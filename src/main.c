@@ -64,18 +64,18 @@ int main(int argc, char **argv)
 	ram[13] = 6;
 	
 	// Hello
-	ram[20] = 'h';
-	ram[21] = 'e';
-	ram[22] = 'l';
+	ram[20] = 'B';
+	ram[21] = 'r';
+	ram[22] = 'e';
 	ram[23] = 'l';
-	ram[24] = 'o';
-	ram[25] = ' ';
-	ram[26] = 'w';
-	ram[27] = 'o';
-	ram[28] = 'r';
-	ram[29] = 'l';
-	ram[30] = 'd';
-	ram[31] = '!';
+	ram[24] = 'y';
+	ram[25] = 'n';
+	ram[26] = 'n';
+	ram[27] = ' ';
+	ram[28] = 'H';
+	ram[29] = 'e';
+	ram[30] = 's';
+	ram[31] = 's';
 
 
     	// ram

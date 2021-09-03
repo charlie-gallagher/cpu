@@ -40,27 +40,31 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case STA_D: 
 		{
+			printf("Storing accumulator (direct)\n");
 			ram[ram[pc1]] = registers->accum;
 			break;
 		}
 		case STA_I: 
 		{
+			printf("Storing acccumulator (indirect)\n");
 			ram[ram[pc1] + registers->index] = registers->accum;
 			break;
 		}
 		case STA_M:
 		{
+			printf("Storing acccumulator (immediate)\n");
 			ram[pc1] = registers->accum;
 			break;
 		}
 		case LDX_D: 
 		{
+			printf("Loading index register (direct)\n");
 			registers->index = ram[ram[pc1]];
 		    	break;
 	    	}
 		case LDX_M: 
 		{
-			printf("Loading accumulator (immediate)\n");
+			printf("Loading index register (immediate)\n");
 		    	registers->index = ram[pc1];
 			break;
 		}
