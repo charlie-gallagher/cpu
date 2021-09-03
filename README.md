@@ -1,9 +1,17 @@
 # Virtual CPU
-This is a quick, informal project emulating a processor. At this point, I
-haven't implemented some important features, like the status register or
-allowing the user to pass in an input file. I'm manually initializing the memory
-array in the `main` function, and I've only written a few opcodes. Still, it's
-fun. 
+This is a quick, informal project emulating a processor. You can set a clock
+frequecy with the `CLK_FREQ` constant defined in `main.h` -- it's given in Hz.
+For watching instructions, something like 1 or 2 is fun, but pretty painfully
+slow. 
+
+I recently implemented the zero flag, so it might not behave perfectly. I have
+one unconditional `JMP` instruction and two conditional jumps (`JEQ` and `JNE`).
+I also have implemented loading and storing the accumulator and the index
+register. See `opcodes.c` for a full list of implemented opcodes, and
+`opcodes.h` for the constant definitions for all opcodes I plan on implementing.
+
+
+
 
 ### Compile
 This program depends on the `unistd.h` header file, so it can't be compiled on
@@ -22,7 +30,9 @@ when you call it.
 ./cpu file
 ```
 
-`file` doesn't have to exist (yet). 
+`file` doesn't have to exist (yet). The default bytes will print "relynn Hess"
+(thanks to an off-by-one error) to the "output" device, and it runs at something
+like 2 Hz. 
 
 ---
 
