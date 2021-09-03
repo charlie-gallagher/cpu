@@ -37,7 +37,6 @@ void set_zero_flag(unsigned char x, struct register_struct *registers);
 #define JMP_M 29
 #define INCX 30
 #define DECX 31
-#define JMP 32
 #define HLT 0
 
 

@@ -26,7 +26,6 @@ struct cli_struct {
 // Function definitions
 struct register_struct *init_register_struct(struct register_struct *registers);
 struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv);
-int load_ram(unsigned char ram[], struct cli_struct *cli);
 void print_ram(unsigned char ram[]);
 void print_io(unsigned char ram[]);
 char get_next_byte(unsigned char *ram, unsigned char pc);

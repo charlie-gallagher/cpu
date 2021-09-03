@@ -1,0 +1,7 @@
+LDA_M
+10
+STA_I
+20
+HELL
+ON
+FIRE

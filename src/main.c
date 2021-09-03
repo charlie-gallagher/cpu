@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "main.h"
 #include "opcodes.h"
+#include "load_ram.h"
 
 
 
@@ -22,6 +23,7 @@ int main(int argc, char **argv)
 	}
 	load_ram(ram, p_cli_args);
 
+	#ifdef DEBUG
 	/* Test */
 	int i; 
 
@@ -147,6 +149,7 @@ int main(int argc, char **argv)
 		}
 	}
 	putchar('\n');
+	#endif
     
 	return 0;
 }
@@ -199,24 +202,6 @@ struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv)
 }
 
 
-/* Load ram
- *
- * 	ram		Memory array acting as RAM
- * 	cli		Pointer to command line struct
- */
-int load_ram(unsigned char ram[], struct cli_struct *cli)
-{
-	/* Temporarily, going to ignore the struct and 
-	 * load ram with all zeros
-	 */
-	int i;
-
-	for (i = 0; i < RAM_SIZE; i++) {
-		ram[i] = 0;
-	}
-
-	return 0;
-}
 
 
 /* Print RAM array

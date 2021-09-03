@@ -109,7 +109,21 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			break;
 		}
-		case JMP:
+		case JMP_D:
+		{
+			printf("Unconditional jump to address %d\n", ram[ram[pc1]]);
+			/* PC automatically incremented after instruction, so -1 */
+			registers->pc = ram[ram[pc1]] - 1;
+			break;
+		}
+		case JMP_I:
+		{
+			printf("Unconditional jump to address %d\n", ram[ram[pc1] + registers->index]);
+			/* PC automatically incremented after instruction, so -1 */
+			registers->pc = ram[ram[pc1] + registers->index] - 1;
+			break;
+		}
+		case JMP_M:
 		{
 			printf("Unconditional jump to address %d\n", ram[pc1]);
 			/* PC automatically incremented after instruction, so -1 */
