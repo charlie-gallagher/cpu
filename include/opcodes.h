@@ -6,6 +6,7 @@
 
 int execute_instruction(unsigned char instruction, unsigned char pc1, 
 		struct register_struct *registers, unsigned char ram[]);
+void set_zero_flag(unsigned char x, struct register_struct *registers);
 
 #define STA_D 1
 #define STA_I 2
@@ -22,7 +23,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 #define CMP_D 15
 #define CMP_I 16
 #define JEQ 17
-#define JNQ 18
+#define JNE 18
 #define ADD_D 19
 #define ADD_I 20
 #define SUB_D 21
@@ -38,5 +39,9 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 #define DECX 31
 #define JMP 32
 #define HLT 0
+
+
+// Status register
+#define STATUS_ZERO_MASK 1
 
 #endif

@@ -52,15 +52,15 @@ int main(int argc, char **argv)
 	ram[2] = STA_D;
 	ram[3] = 90;
 	ram[4] = LDX_M;
-	ram[5] = 0;
-	// Unconditional loop to print "Hello" in IO
+	ram[5] = 13;
+	// Conditional loop
 	ram[6] = LDA_I;
 	ram[7] = 20;
 	ram[8] = STA_I;
 	ram[9] = IO_START;
-	ram[10] = INCX;
+	ram[10] = DECX;
 	ram[11] = 0; // No-op for fixed width instruction with no operand
-	ram[12] = JMP;
+	ram[12] = JNE;
 	ram[13] = 6;
 	
 	// Hello
@@ -115,6 +115,7 @@ int main(int argc, char **argv)
 
 			printf("Accumulator: %d\n", p_regis->accum);
 			printf("Index: %d\n", p_regis->index);
+			printf("Zero flag: %d\n", p_regis->status & STATUS_ZERO_MASK);
 
 
 			printf("I/O Print\n------\n");
@@ -127,8 +128,11 @@ int main(int argc, char **argv)
 				break;
 			}
 
-			printf("Sleeping for 1 second...\n");
-			sleep(1 / CLK_FREQ);
+			float clk_seconds = 1 / (float) CLK_FREQ;
+			double clk_microseconds = clk_seconds * 1000000;
+
+			printf("Sleeping for %f seconds...\n", clk_seconds);
+			usleep(clk_microseconds);
 		}
 
 	}
