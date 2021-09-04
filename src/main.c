@@ -11,6 +11,7 @@
 int main(int argc, char **argv)
 {
     	unsigned char ram[RAM_SIZE];
+	int halt_flag = 0;
     	struct register_struct regis;
     	struct register_struct *p_regis = &regis;
     	struct cli_struct cli_args;
@@ -39,8 +40,8 @@ int main(int argc, char **argv)
 	printf("\n\n");
 
 
+
 	while (1) {
-		int halt_flag = 0;
 
 		printf("Program counter: %d\n", p_regis->pc);
 
@@ -52,7 +53,7 @@ int main(int argc, char **argv)
 			p_regis->pc++;
 		} 
 
-		// Fetch next two bytes
+		// Fetch operand
 		else {
 			printf("Execution cycle\n");
 			halt_flag = execute_instruction(p_regis->instruction, 
@@ -82,7 +83,7 @@ int main(int argc, char **argv)
 			float clk_seconds = 1 / (float) CLK_FREQ;
 			double clk_microseconds = clk_seconds * 1000000;
 
-			printf("Sleeping for %f seconds...\n", clk_seconds);
+			printf("Sleeping for %0.3f seconds...\n", clk_seconds);
 			usleep(clk_microseconds);
 		}
 
