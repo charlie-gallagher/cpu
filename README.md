@@ -40,6 +40,49 @@ This will write "Brelynn Hess" to the pseudo-IO device, which is nothing more
 than a block of memory reserved for such purposes. 
 
 
+### Instruction set
+
+```
+ADD_D       Add number to accumulator
+ADD_I
+ADD_M
+AND_D       AND operand with accumulator
+AND_I
+AND_M
+CMP_D       Compare operand to accumulator
+CMP_I
+DEC_D       Decrement place in memory
+DEC_I
+DECX        Decrement X register
+HLT         Halt
+INC_D       Increment place in memory
+INC_I
+INCX        Increment X register
+JEQ_D       Jump if zero flag set
+JEQ_I
+JEQ_M
+JMP_D       Unconditional jump
+JMP_I
+JMP_M
+JNE_D       Jump if zero flag not set
+JNE_I
+JNE_M
+LDA_D       Load accumulator
+LDA_I
+LDA_M
+LDX_D       Load X register
+LDX_M
+OR_D        OR operand with accumulator
+OR_I
+OR_M
+STA_D       Store accumulator
+STA_I
+STA_M
+SUB_D       Subtract number from accumulator
+SUB_I
+SUB_M
+```
+
 ---
 
 Charlie Gallagher, August 2021

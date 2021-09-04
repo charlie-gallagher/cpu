@@ -6,8 +6,9 @@
 
 int execute_instruction(unsigned char instruction, unsigned char pc1, 
 		struct register_struct *registers, unsigned char ram[]);
-void set_zero_flag(unsigned char x, struct register_struct *registers);
-unsigned char *absolute_address(int type, unsigned char ram[], unsigned char pc, int index);
+void set_zero_flag(unsigned char x, unsigned char *pstatus);
+void set_status_flag(int set, int mask, unsigned char *pstatus);
+unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, int index);
 
 #define STA_D 1
 #define STA_I 2
@@ -42,6 +43,10 @@ unsigned char *absolute_address(int type, unsigned char ram[], unsigned char pc,
 #define JEQ_M 33
 #define JNE_I 34
 #define JNE_M 35
+#define ADD_M 36
+#define SUB_M 37
+#define AND_M 38
+#define OR_M 39
 #define HLT 0
 
 
@@ -51,6 +56,8 @@ unsigned char *absolute_address(int type, unsigned char ram[], unsigned char pc,
 #define IMMED_ADDR 102
 
 // Status register
+#define STATUS_REGISTER &(registers->status)
 #define STATUS_ZERO_MASK 1
+#define STATUS_NEG_MASK 2
 
 #endif
