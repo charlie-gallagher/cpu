@@ -34,7 +34,7 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 	while (i < RAM_SIZE) {
 		printf("READING FILE: line %d\n", i);
 		if (read_assembly_line(ram, i, fp) == 1) {
-			printf("Aborting file read early -- not 256 lines\n");
+			printf("End of file: read %d lines\n", i);
 			break;
 		}
 		printf("Byte: %d\n", ram[i]);
@@ -57,11 +57,34 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	char line[80];
 	int c, byte_code;
 
-	fgets(line, 80, fp); 
+
+	while (1) {
+		fgets(line, 80, fp);
+		if (feof(fp) != 0) {
+			printf("End of file reached\n");
+			return 1;
+		}
+		else if (line == NULL) {
+			printf("Null pointer found\n");
+			return 1;
+		}
+		else {
+			if (line[0] == '\n') {
+				printf("Blank line\n");
+			} else if (line[0] == '#') {
+				printf("Comment line\n");
+			} else {
+				break;
+			}
+		}
+	}
+
 	/* Strip off newline */
 	for (c = 0; c < 80; c++) {
 		if (line[c] == '\n') {
 			line[c] = '\0';
+		} else if (line[c] == '\0') {
+			break;
 		}
 	}
 
@@ -73,14 +96,12 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	if (byte_code == -1) {
 		fprintf(stderr, "Error parsing commands\n");
 		exit(1);
+	} else if (byte_code == -2) {
+		printf("Skipping comment\n");
+	} else {
+		ram[i] = byte_code;
 	}
 
-	ram[i] = byte_code;
-
-	if (feof(fp) != 0) {
-		printf("End of file reached\n");
-		return 1;
-	}
 
 
 	return 0;
@@ -158,6 +179,8 @@ int parse_line(char *line)
 		return IO_START;
 	} else if (line[0] == '0' || atoi(line) != 0) {
 		return atoi(line);
+	} else if (line[0] == '#') {
+		return -2;
 	} else if (line[0] == '\0') {
 		return 0;
 	} else {

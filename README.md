@@ -8,15 +8,12 @@ See `opcodes.c` for a full list of implemented opcodes, and `opcodes.h` for the
 constant definitions for all opcodes I plan on implementing.
 
 I just implemented a very basic assembler so you don't have to know the opcodes
-to use the CPU. It recognizes all of the opcodes and some symbolic constants
-like `IO_START`, which is the section of memory that prints after each clock
-cycle. 
+to use the CPU. (In otherwise, it recognizes mnemonics.) It recognizes all of
+the opcodes and some symbolic constants like `IO_START`, which is the section of
+memory that prints after each clock cycle. 
 
-In progress: 
-
-- Code comments
-- Handling empty lines
-
+The assembler also knows to filter out blank lines and comment lines that begin
+with `#`.
 
 
 

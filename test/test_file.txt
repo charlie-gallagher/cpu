@@ -48,4 +48,6 @@ DECX
 0
 JNE_M
 42
+
+# Otherwise halt
 HLT
