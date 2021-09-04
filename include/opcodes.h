@@ -12,7 +12,6 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 
 #define STA_D 1
 #define STA_I 2
-#define STA_M 3
 #define LDA_D 4
 #define LDA_I 5
 #define LDA_M 6

@@ -2,7 +2,7 @@
 #else 
 #define MAIN_CPU
 #define RAM_SIZE 256
-#define CLK_FREQ 2
+#define CLK_FREQ 5
 #define IO_START 200
 #define INSTRUCT_PASS 254
 

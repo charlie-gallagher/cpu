@@ -67,6 +67,7 @@ int main(int argc, char **argv)
 			printf("Index: %d\n", p_regis->index);
 			printf("Zero flag: %d\n", p_regis->status & STATUS_ZERO_MASK);
 
+			print_ram(ram);
 
 			printf("I/O Print\n------\n");
 			print_io(ram);

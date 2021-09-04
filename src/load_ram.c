@@ -13,7 +13,7 @@
 int load_ram(unsigned char ram[], struct cli_struct *cli)
 {
 	FILE *fp;
-	int i, c;
+	int i;
 
 	/* Initialize RAM array */
 	for (i = 0; i < RAM_SIZE; i++) {
@@ -52,7 +52,7 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
  * Only takes at most 5 characters from each line
  * Reads a line into the contents array
  */
-int read_assembly_line(char ram[], int i, FILE *fp)
+int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 {
 	char line[80];
 	int c, byte_code;
@@ -98,8 +98,6 @@ int parse_line(char *line)
 		return STA_D;
 	} else if (strcmp(line, "STA_I") == 0) {
 		return STA_I;
-	} else if (strcmp(line, "STA_M") == 0) {
-		return STA_M;
 	} else if (strcmp(line, "LDX_D") == 0) {
 		return LDX_D;
 	} else if (strcmp(line, "LDX_M") == 0) {

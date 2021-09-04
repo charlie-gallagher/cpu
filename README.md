@@ -15,6 +15,7 @@ cycle.
 In progress: 
 
 - Code comments
+- Handling empty lines
 
 
 
@@ -36,11 +37,16 @@ so you know what to expect.
 ./cpu test/test_file.txt
 ```
 
-This will write "Brelynn Hess" to the pseudo-IO device, which is nothing more
-than a block of memory reserved for such purposes. 
+This will write the first few digits of pi to the pseudo-IO device, which is
+nothing more than a block of memory reserved for such purposes. 
 
 
 ### Instruction set
+The instructions use suffixes to indicate the addressing mode.
+
+- "D" Direct, or absolute, addressing
+- "I" Indirect addressing
+- "M" Immediate addressing
 
 ```
 ADD_D       Add number to accumulator
@@ -77,7 +83,6 @@ OR_I
 OR_M
 STA_D       Store accumulator
 STA_I
-STA_M
 SUB_D       Subtract number from accumulator
 SUB_I
 SUB_M

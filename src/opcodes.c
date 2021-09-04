@@ -72,16 +72,6 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
 			break;
 		}
-		case STA_M:
-		{
-			printf("Storing acccumulator (immediate)\n");
-			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
-			*paddr = registers->accum;
-
-			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
-			break;
-		}
 		case LDX_D: 
 		{
 			printf("Loading index register (direct)\n");
@@ -229,41 +219,45 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
 			printf("Incrementing value (direct)\n");
-			*paddr++;
+			(*paddr)++;
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			break;
 		}
 		case INC_I:
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("Incrementing value (indirect)\n");
-			*paddr++;
+			(*paddr)++;
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			break;
 		}
 		case DEC_D:
 		{
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
 			printf("Decrementing value (direct)\n");
-			*paddr--;
+			(*paddr)--;
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			break;
 		}
 		case DEC_I:
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("Decrementing value (indirect)\n");
-			*paddr--;
+			(*paddr)--;
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			break;
 		}
 		case CMP_D:
 		{
@@ -286,6 +280,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 				set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
 			}
 
+			break;
+
 		}
 		case CMP_I:
 		{
@@ -301,7 +297,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 				set_status_flag(0, STATUS_ZERO_MASK, STATUS_REGISTER);
 				set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
 			}
-
+			
+			break;
 		}
 		case ADD_D:
 		{
@@ -312,6 +309,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case ADD_I:
 		{
@@ -322,6 +321,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case ADD_M:
 		{
@@ -332,6 +333,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case SUB_D:
 		{
@@ -342,6 +345,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case SUB_I:
 		{
@@ -352,6 +357,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case SUB_M:
 		{
@@ -362,6 +369,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case AND_D:
 		{
@@ -372,6 +381,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case AND_I:
 		{
@@ -382,6 +393,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case AND_M:
 		{
@@ -392,6 +405,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case OR_D:
 		{
@@ -402,6 +417,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case OR_I:
 		{
@@ -412,6 +429,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case OR_M:
 		{
@@ -422,6 +441,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+
+			break;
 		}
 		case HLT:
 		{
