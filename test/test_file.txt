@@ -6,7 +6,7 @@ STA_I
 IO_START
 DECX
 0
-JNE
+JNE_M
 2
 0
 0

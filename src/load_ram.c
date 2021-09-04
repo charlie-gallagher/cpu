@@ -116,10 +116,18 @@ int parse_line(char *line)
 		return CMP_D;
 	} else if (strcmp(line, "CMP_I") == 0) {
 		return CMP_I;
-	} else if (strcmp(line, "JEQ") == 0) {
-		return JEQ;
-	} else if (strcmp(line, "JNE") == 0) {
-		return JNE;
+	} else if (strcmp(line, "JEQ_D") == 0) {
+		return JEQ_D;
+	} else if (strcmp(line, "JEQ_I") == 0) {
+		return JEQ_I;
+	} else if (strcmp(line, "JEQ_M") == 0) {
+		return JEQ_M;
+	} else if (strcmp(line, "JNE_D") == 0) {
+		return JNE_D;
+	} else if (strcmp(line, "JNE_I") == 0) {
+		return JNE_I;
+	} else if (strcmp(line, "JNE_M") == 0) {
+		return JNE_M;
 	} else if (strcmp(line, "ADD_D") == 0) {
 		return ADD_D;
 	} else if (strcmp(line, "ADD_I") == 0) {

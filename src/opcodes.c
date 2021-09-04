@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "main.h"
 #include "opcodes.h"
 /* Opcode execution
@@ -17,11 +18,14 @@
 int execute_instruction(unsigned char instruction, unsigned char pc1, 
 		struct register_struct *registers, unsigned char ram[])
 {
+	unsigned char *paddr;  // Absolute address
+
 	switch (instruction) {
 		case LDA_D: 
 		{
 			printf("Loading accumulator (direct)\n");
-			registers->accum = ram[ram[pc1]];
+			paddr = absolute_address(DIR_ADDR, ram, pc1, registers->index);
+			registers->accum = *paddr;
 
 			set_zero_flag(registers->accum, registers);
 		    	break;
@@ -29,8 +33,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case LDA_I: 
 		{
 			printf("Loading accumulator (indirect)\n");
-			registers->accum = 
-			    ram[ram[pc1] + registers->index];
+			paddr = absolute_address(INDIR_ADDR, ram, pc1, registers->index);
+			registers->accum = *paddr; 
 
 			set_zero_flag(registers->accum, registers);
 		    	break;
@@ -38,8 +42,9 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case LDA_M: 
 		{
 			printf("Loading accumulator (immediate)\n");
-			printf("Memory value: %d\n", ram[pc1]);
-		    	registers->accum = ram[pc1];
+			paddr = absolute_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Memory value: %d\n", *paddr);
+		    	registers->accum = *paddr;
 
 			set_zero_flag(registers->accum, registers);
 			break;
@@ -47,7 +52,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case STA_D: 
 		{
 			printf("Storing accumulator (direct)\n");
-			ram[ram[pc1]] = registers->accum;
+			paddr = absolute_address(DIR_ADDR, ram, pc1, registers->index);
+			*paddr = registers->accum;
 
 			set_zero_flag(registers->accum, registers);
 			break;
@@ -55,7 +61,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case STA_I: 
 		{
 			printf("Storing acccumulator (indirect)\n");
-			ram[ram[pc1] + registers->index] = registers->accum;
+			paddr = absolute_address(INDIR_ADDR, ram, pc1, registers->index);
+			*paddr = registers->accum;
 			
 			set_zero_flag(registers->accum, registers);
 			break;
@@ -63,7 +70,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case STA_M:
 		{
 			printf("Storing acccumulator (immediate)\n");
-			ram[pc1] = registers->accum;
+			paddr = absolute_address(IMMED_ADDR, ram, pc1, registers->index);
+			*paddr = registers->accum;
 
 			set_zero_flag(registers->accum, registers);
 			break;
@@ -71,7 +79,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case LDX_D: 
 		{
 			printf("Loading index register (direct)\n");
-			registers->index = ram[ram[pc1]];
+			paddr = absolute_address(DIR_ADDR, ram, pc1, registers->index);
+			registers->index = *paddr;
 
 			/* Zero flag */
 			set_zero_flag(registers->index, registers);
@@ -81,7 +90,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case LDX_M: 
 		{
 			printf("Loading index register (immediate)\n");
-		    	registers->index = ram[pc1];
+			paddr = absolute_address(IMMED_ADDR, ram, pc1, registers->index);
+		    	registers->index = *paddr;
 
 			/* Zero flag */
 			set_zero_flag(registers->index, registers);
@@ -111,42 +121,95 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case JMP_D:
 		{
-			printf("Unconditional jump to address %d\n", ram[ram[pc1]]);
+			paddr = absolute_address(DIR_ADDR, ram, pc1, registers->index);
+			printf("Unconditional jump to address %d\n", *paddr);
 			/* PC automatically incremented after instruction, so -1 */
-			registers->pc = ram[ram[pc1]] - 1;
+			registers->pc = *paddr - 1;
 			break;
 		}
 		case JMP_I:
 		{
-			printf("Unconditional jump to address %d\n", ram[ram[pc1] + registers->index]);
+			paddr = absolute_address(INDIR_ADDR, ram, pc1, registers->index);
+			printf("Unconditional jump to address %d\n", *paddr);
 			/* PC automatically incremented after instruction, so -1 */
-			registers->pc = ram[ram[pc1] + registers->index] - 1;
+			registers->pc = *paddr - 1;
 			break;
 		}
 		case JMP_M:
 		{
-			printf("Unconditional jump to address %d\n", ram[pc1]);
+			paddr = absolute_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Unconditional jump to address %d\n", *paddr);
 			/* PC automatically incremented after instruction, so -1 */
-			registers->pc = ram[pc1] - 1;
+			registers->pc = *paddr - 1;
 			break;
 		}
-		case JEQ:
+		case JEQ_D:
 		{
+			paddr = absolute_address(DIR_ADDR, ram, pc1, registers->index);
 			printf("Conditional jump (zero): ");
 			if ((registers->status & STATUS_ZERO_MASK) == 1) {
-				printf("Jumping to address %d\n", ram[pc1]);
-				registers->pc = ram[pc1] - 1;
+				printf("Jumping to address %d\n", *paddr);
+				registers->pc = *paddr - 1;
 			} else {
 				printf("Passing without jumping\n");
 			}
 			break;
 		}
-		case JNE:
+		case JEQ_I:
 		{
+			paddr = absolute_address(INDIR_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (zero): ");
+			if ((registers->status & STATUS_ZERO_MASK) == 1) {
+				printf("Jumping to address %d\n", *paddr);
+				registers->pc = *paddr - 1;
+			} else {
+				printf("Passing without jumping\n");
+			}
+			break;
+		}
+		case JEQ_M:
+		{
+			paddr = absolute_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (zero): ");
+			if ((registers->status & STATUS_ZERO_MASK) == 1) {
+				printf("Jumping to address %d\n", *paddr);
+				registers->pc = *paddr - 1;
+			} else {
+				printf("Passing without jumping\n");
+			}
+			break;
+		}
+		case JNE_D:
+		{
+			paddr = absolute_address(DIR_ADDR, ram, pc1, registers->index);
 			printf("Conditional jump (not zero): ");
 			if ((registers->status & STATUS_ZERO_MASK) != 1) {
-				printf("Jumping to address %d\n", ram[pc1]);
-				registers->pc = ram[pc1] - 1;
+				printf("Jumping to address %d\n", *paddr);
+				registers->pc = *paddr - 1;
+			} else {
+				printf("Passing without jumping\n");
+			}
+			break;
+		}
+		case JNE_I:
+		{
+			paddr = absolute_address(INDIR_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (not zero): ");
+			if ((registers->status & STATUS_ZERO_MASK) != 1) {
+				printf("Jumping to address %d\n", *paddr);
+				registers->pc = *paddr - 1;
+			} else {
+				printf("Passing without jumping\n");
+			}
+			break;
+		}
+		case JNE_M:
+		{
+			paddr = absolute_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (not zero): ");
+			if ((registers->status & STATUS_ZERO_MASK) != 1) {
+				printf("Jumping to address %d\n", *paddr);
+				registers->pc = *paddr - 1;
 			} else {
 				printf("Passing without jumping\n");
 			}
@@ -179,3 +242,43 @@ void set_zero_flag(unsigned char x, struct register_struct *registers)
 			(255 - STATUS_ZERO_MASK);
 	}
 }
+
+
+/* Returns the absolute address of an instruction
+ *
+ * Inputs a type (a symbolic constant defined in opcodes.h)
+ * Returns a pointer to the requested location in the RAM array
+ */
+unsigned char *absolute_address(int type, unsigned char ram[], unsigned char pc, int index)
+{
+	int addr;  // Address in RAM
+
+	switch (type) {
+		case DIR_ADDR: 
+		{
+			addr = ram[pc];
+			break;
+		}
+		case INDIR_ADDR:
+		{
+			addr = ram[pc] + index;
+			break;
+		}
+		case IMMED_ADDR:
+		{
+			addr = pc;
+			break;
+		}
+		default:
+		{
+			fprintf(stderr, "Unknown addressing mode\n");
+			exit(1);
+		}
+	}
+
+	printf("Operand location in RAM: %d\n", addr);
+	printf("Operand value in RAM: %d\n", ram[addr]);
+
+	return &ram[addr];
+}
+
