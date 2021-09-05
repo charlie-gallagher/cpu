@@ -1,4 +1,4 @@
-# Load pi into memory manually
+; Load pi into memory manually
 LDX_M
 1
 LDA_M
@@ -42,7 +42,7 @@ ADD_D
 STA_I
 50
 
-# Start printing
+; Start printing
 LDA_I
 50
 STA_I
@@ -52,5 +52,5 @@ DECX
 JNE_M
 42
 
-# Otherwise halt
+; Otherwise halt
 HLT

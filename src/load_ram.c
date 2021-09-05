@@ -179,7 +179,7 @@ int parse_line(char *line)
 		return IO_START;
 	} else if (line[0] == '0' || atoi(line) != 0) {
 		return atoi(line);
-	} else if (line[0] == '#') {
+	} else if (line[0] == ';') {
 		return -2;
 	} else if (line[0] == '\0') {
 		return 0;

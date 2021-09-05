@@ -12,8 +12,6 @@ to use the CPU. (In otherwise, it recognizes mnemonics.) It recognizes all of
 the opcodes and some symbolic constants like `IO_START`, which is the section of
 memory that prints after each clock cycle. 
 
-The assembler also knows to filter out blank lines and comment lines that begin
-with `#`.
 
 
 
@@ -37,6 +35,18 @@ so you know what to expect.
 This will write the first few digits of pi to the pseudo-IO device, which is
 nothing more than a block of memory reserved for such purposes. 
 
+### Assembler
+The assembler also knows to filter out blank lines and comment lines that begin
+with `;`. Line-end comments are not supported, nor is white space at the
+beginning or end of a line. There's no way to define variables or labels, so
+jump instructions can be difficult to write. 
+
+To write a jump address, you have to count the number of instructions and
+operands since the first one (zero-indexed). If you don't use blank lines or
+comments, the address of a particular line is the line number minus 1.
+Otherwise, you'll have to do a sort of calculation like "line number - blank
+lines - comment lines - 1". 
+
 
 ### Instruction set
 The instructions use suffixes to indicate the addressing mode.
@@ -44,6 +54,9 @@ The instructions use suffixes to indicate the addressing mode.
 - "D" Direct, or absolute, addressing
 - "I" Indirect addressing
 - "M" Immediate addressing
+
+Notably, I haven't written any instructions for the stack, so if you want that
+type of behavior you'll have to implement it in software. 
 
 ```
 ADD_D       Add number to accumulator
