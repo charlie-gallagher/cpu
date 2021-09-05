@@ -71,7 +71,7 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 		else {
 			if (line[0] == '\n') {
 				printf("Blank line\n");
-			} else if (line[0] == '#') {
+			} else if (line[0] == ';') {
 				printf("Comment line\n");
 			} else {
 				break;
