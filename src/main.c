@@ -152,7 +152,7 @@ void print_ram(unsigned char ram[])
 {
 	int i;
 	for (i = 0; i < RAM_SIZE; i++) {
-		printf("%d ", ram[i]);
+		printf("%02x ", ram[i]);
 		
 		if (i % 16 == 15) {
 			putchar('\n');
