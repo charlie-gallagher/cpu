@@ -1,56 +1,33 @@
-; Load pi into memory manually
-LDX_M
-1
-LDA_M
-48
-STA_D	; Store accumulator in address 90
-90
-LDA_M
-3
-ADD_D
-90
-STA_I
-50
-INCX
-0	; Implied addressing instructions take a no-op byte
-LDA_M
-46
-STA_I
-50
-INCX
-0
-LDA_M
-1
-ADD_D
-90
-STA_I
-50
-INCX
-0
-LDA_M
-4
-ADD_D
-90
-STA_I
-50
-INCX
-0
-LDA_M
-1
-ADD_D
-90
-STA_I
-50
+JMP   ; 00
+0Eh
 
-; Print routine
-	LDA_I
-	32h
-	STA_I
-	IO_START	; Place in RAM where IO starts
-	DECX
+; The text file is merely a set of bytes to load into
+; memory, so you don't need a 'load data' instruction
+	'h'    ; 02
+	'e'
+	'l'
+	'l'
+	'o'
+	' '
+	'w'
+	'o'
+	'r'
+	'l'
+	'd'
 	00h
-	JNE
-	2Ah
 
-; Otherwise halt
+; Print hello world
+	LDX_M   ; addr: 0E
+	00h
+	INCX
+	00h	; no-op byte
+	LDA_I
+	01h
+	STA_I
+	IO_START
+	JNE
+	-6   ; Conditional jumps use relative addressing
+	     ; The jump is relative to the instruction, not
+	     ; the operand
+
 HLT
