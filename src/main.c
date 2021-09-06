@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "main.h"
 #include "opcodes.h"
 #include "load_ram.h"
@@ -134,15 +135,33 @@ struct register_struct *init_register_struct(struct register_struct *registers)
 struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv)
 {
 	if (argc != 2) {
-		fprintf(stderr, "Incorrect argument\n");
-		return NULL;
+		fprintf(stderr, "Incorrect number of arguments\n");
+		print_help();
+		exit(0);
 	}
+
+	// Handle help and version arguments
+	if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
+		print_help();
+		exit(0);
+	} else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0) {
+		printf("cpu, Version %d.%d.%d\n", MAJOR_VERSION, MINOR_VERSION, PATCH);
+		exit(0);
+	}
+
 
 	cl_args->input_file = argv[1];
 
 	return cl_args;
 }
 
+
+void print_help(void)
+{
+	printf("Usage: cpu [-h|--help] [-v|--version] FILE\n");
+	printf("\nA basic 6502-based CPU simulator\n");
+	printf("\nReport bugs to charlesjgallagher15@gmail.com\n");
+}
 
 
 

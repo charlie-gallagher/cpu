@@ -6,6 +6,10 @@
 #define IO_START 0xF0
 #define INSTRUCT_PASS 0xFE
 
+#define MAJOR_VERSION 0
+#define MINOR_VERSION 1
+#define PATCH 0
+
 
 // Struct definitions
 struct register_struct {
@@ -26,6 +30,7 @@ struct cli_struct {
 // Function definitions
 struct register_struct *init_register_struct(struct register_struct *registers);
 struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv);
+void print_help(void);
 void print_ram(unsigned char ram[]);
 void print_io(unsigned char ram[]);
 char get_next_byte(unsigned char *ram, unsigned char pc);
