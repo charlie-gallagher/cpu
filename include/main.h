@@ -1,10 +1,10 @@
 #ifdef MAIN_CPU
 #else 
 #define MAIN_CPU
-#define RAM_SIZE 256
+#define RAM_SIZE 0x100
 #define CLK_FREQ 5
-#define IO_START 200
-#define INSTRUCT_PASS 254
+#define IO_START 0xF0
+#define INSTRUCT_PASS 0xFE
 
 
 // Struct definitions

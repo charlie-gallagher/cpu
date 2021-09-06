@@ -10,8 +10,9 @@ constant definitions for all opcodes I plan on implementing.
 I just implemented a very basic assembler so you don't have to know the opcodes
 to use the CPU. (In otherwise, it recognizes mnemonics.) It recognizes all of
 the opcodes and some symbolic constants like `IO_START`, which is the section of
-memory that prints after each clock cycle. 
-
+memory that prints after each clock cycle. This is defined in `include/main.h`,
+so you can set your own value there. Currently, it's set to the last 16 bytes in
+RAM. 
 
 
 
@@ -22,11 +23,13 @@ Windows.
 
 ```
 gcc -I include -o cpu src/*.c
+
+# Or just make
+make
 ```
 
 ### Example
-I've included a test file, which is the best way to run this for the first time
-so you know what to expect. 
+I've included a test file, which is the best way to run this for the first time.
 
 ```
 ./cpu test/test_file.txt
@@ -60,7 +63,7 @@ LDA_M  ; Load accumulator
 
 ; Store value in 3F
 STA_D  ; Store accumulator
-3fh
+3Fh
 ```
 
 will be entered into RAM as
@@ -71,6 +74,9 @@ will be entered into RAM as
 2: STA_D
 3: 3fh
 ```
+
+(Note: there's no typo in the first block, you can use uppercase or lowercase
+characters in your hex.)
 
 Thus, to write a jump address, you have to count the number of instructions and
 operands since the first one (zero-indexed). If you don't use blank lines or
@@ -134,4 +140,4 @@ SUB_M
 
 ---
 
-Charlie Gallagher, August 2021
+Charlie Gallagher, September 2021
