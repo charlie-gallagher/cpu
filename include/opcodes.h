@@ -23,8 +23,8 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define DEC_I 14
 #define CMP_D 15
 #define CMP_I 16
-#define JEQ 17
-#define JNE 18
+#define BEQ 17
+#define BNE 18
 #define ADD_D 19
 #define ADD_I 20
 #define SUB_D 21

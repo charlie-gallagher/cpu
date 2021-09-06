@@ -128,7 +128,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			registers->pc = *paddr - 1;
 			break;
 		}
-		case JEQ:
+		case BEQ:
 		{
 			/* All conditional branching instructions uses the second 
 			 * byte as the number of locations to move. To the PC, the
@@ -149,7 +149,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			}
 			break;
 		}
-		case JNE:
+		case BNE:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
 			printf("Conditional jump (not zero): ");

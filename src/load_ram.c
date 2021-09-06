@@ -134,10 +134,10 @@ int parse_line(char *line)
 		return CMP_D;
 	} else if (strcmp(line, "CMP_I") == 0) {
 		return CMP_I;
-	} else if (strcmp(line, "JEQ") == 0) {
-		return JEQ;
-	} else if (strcmp(line, "JNE") == 0) {
-		return JNE;
+	} else if (strcmp(line, "BEQ") == 0) {
+		return BEQ;
+	} else if (strcmp(line, "BNE") == 0) {
+		return BNE;
 	} else if (strcmp(line, "ADD_D") == 0) {
 		return ADD_D;
 	} else if (strcmp(line, "ADD_I") == 0) {

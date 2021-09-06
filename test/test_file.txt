@@ -25,7 +25,7 @@ JMP   ; 00
 	01h
 	STA_I
 	IO_START
-	JNE
+	BNE
 	-6   ; Conditional jumps use relative addressing
 	     ; The jump is relative to the instruction, not
 	     ; the operand

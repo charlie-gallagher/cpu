@@ -115,8 +115,8 @@ INC_I
 INCX        Increment X register
 JMP         Unconditional jump
 /* NOTE: Conditional jumps go to address PC + OPERAND
-JEQ         Jump if zero flag set
-JNE         Jump if zero flag not set
+BEQ         Jump if zero flag set
+BNE         Jump if zero flag not set
 LDA_D       Load accumulator
 LDA_I
 LDA_M
