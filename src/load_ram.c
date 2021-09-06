@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "main.h"
 #include "opcodes.h"
 #include "load_ram.h"
@@ -198,20 +199,27 @@ int parse_line(char *line)
  */
 int htoi(char *str)
 {
-	int slen = strlen(str);
-	int i;
+	int i, c, rad;
 	int value = 0;
 
-	if (slen != 3) {
+	if (strlen(str) != 3) {
 		return -1;
 	}
 
-	for (i = 0; i < slen; i++) {
-		if (str[i] <= 'f' && str[i] >= 'a') {
-			value += str[i] - 'a' + 10;
-		} else if (str[i] <= '9' && str[i] >= '0') {
-			value += str[i] - '0';
-		} else if (i == 2 && str[i] == 'h') {
+
+
+	for (i = 0; i < strlen(str); i++) {
+		c = tolower(str[i]);
+
+		// Only two characters are allowed, so no need to load math.h
+		if (i == 0) rad = 16;
+		else if (i == 1) rad = 1;
+
+		if (c <= 'f' && c >= 'a') {
+			value += rad * (c - 'a' + 10);
+		} else if (c <= '9' && c >= '0') {
+			value += rad * (c - '0');
+		} else if (i == 2 && c == 'h') {
 			// ignore terminal h
 			;
 		} else {

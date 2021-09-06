@@ -1,7 +1,7 @@
 ; Load pi into memory manually
 LDX_M
 1
-	LDA_M
+LDA_M
 48
 STA_D	; Store accumulator in address 90
 90
@@ -12,7 +12,7 @@ ADD_D
 STA_I
 50
 INCX
-0
+0	; Implied addressing instructions take a no-op byte
 LDA_M
 46
 STA_I
@@ -42,15 +42,15 @@ ADD_D
 STA_I
 50
 
-; Start printing
-LDA_I
-50
-STA_I
-IO_START
-DECX
-0
-JNE_M
-42
+; Print routine
+	LDA_I
+	32h
+	STA_I
+	IO_START	; Place in RAM where IO starts
+	DECX
+	00h
+	JNE_M
+	2Ah
 
 ; Otherwise halt
 HLT

@@ -36,17 +36,51 @@ This will write the first few digits of pi to the pseudo-IO device, which is
 nothing more than a block of memory reserved for such purposes. 
 
 ### Assembler
-The assembler also knows to filter out blank lines and comment lines that begin
-with `;`. Line-end comments are not supported, nor is white space at the
-beginning or end of a line. There's no way to define variables or labels, so
-jump instructions can be difficult to write. 
+The assembler is extremely basic. The user is responsible for writing machine
+code instructions using mnemonics of the form "INSTRUCTION\_MODE". MODE can be
+one of "D", "I", or "M" for Direct, Indirect, and iMmediate address modes. The
+operands may be in hex (format `xxh`, e.g. `4fh`) or decimal if the hex format
+is not used. So, for example, `25` will be read as decimal, `2fh` as
+hexadecimal, and `2f` as `2`, because `atoi` is used to convert numbers.
+Alphabetical hex characters may be uppercase or lowercase. 
 
-To write a jump address, you have to count the number of instructions and
+Comments begin with `;` and may be included on a line by itself or at the end of
+a line. Any part of a line after the ";" is dropped during processing. 
+
+Whitespace is also stripped from the lines, so you can indent lines for clarity. 
+
+Instructions are placed in the first addresses in RAM. Every operation is 2
+bytes (1 byte instruction, 1 byte operand), and blank lines and comment lines do
+not affect the numbering of address locations. So, for example,
+
+```
+; Begin program
+LDA_M  ; Load accumulator
+2fh
+
+; Store value in 3F
+STA_D  ; Store accumulator
+3fh
+```
+
+will be entered into RAM as
+
+```
+0: LDA_M
+1: 2fh
+2: STA_D
+3: 3fh
+```
+
+Thus, to write a jump address, you have to count the number of instructions and
 operands since the first one (zero-indexed). If you don't use blank lines or
 comments, the address of a particular line is the line number minus 1.
 Otherwise, you'll have to do a sort of calculation like "line number - blank
 lines - comment lines - 1". 
 
+Every instruction takes an operand, even implied addressing instructions like
+`INCX`. If you use `INCX`, you must follow it with a null byte (or any other
+byte, but for clarity's sake use a null byte). 
 
 ### Instruction set
 The instructions use suffixes to indicate the addressing mode.
