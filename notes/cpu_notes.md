@@ -325,6 +325,8 @@ of which, I should really start using my GP register.
 Anyway, the functioning would look something like this: 
 
 ```
+JMP
+hello
 label: 
     LDA_M
     1F
@@ -353,8 +355,30 @@ I'm not set up to process strings. The assembler assumes each line can be
 converted to a single integer. What I can do is process characters like 'c' and
 convert them into ASCII. That should be easy enough. 
 
+To update, I implemented characters and I fixed the addressing of the
+conditional jump commands to match those of the 6502. A quick look at the
+example file will be all that's necessary to understand this, I think. 
+
+### Label data structure
+What's the process for using labels? The address of the next instruction in RAM
+is stored and associated with the name of the label. Consider the above small
+program. "label" is associated with address 00h, and "hello" is associated with
+address 02h. This list must be compiled before the program runs. That's the
+tricky bit, because I'll have to add a stage to the file processing. 
+
+It wouldn't take too long, but I don't know if I'm prepared for it. I guess the
+first pass through the file is also called by `load_ram`, and it opens and
+closes the file independently of the assembler function. All it does is go
+through and look for labels, which get added to a struct. I suppose there will
+need to be a limit to the number of labels, so that I can keep this
+deterministic. All will have max character counts of 78, etc. etc.
+
+It'll take a little more logic to find the right address in RAM to associate
+with it, but skipping blank lines and comments and other labels, should be okay. 
+
+In any case it's more of a nice-to-have, so for now I won't implement it. 
 
 
 ---
 
-Charlie Gallagher, August 2021
+Charlie Gallagher, September 2021

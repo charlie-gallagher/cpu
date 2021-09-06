@@ -78,11 +78,10 @@ will be entered into RAM as
 (Note: there's no typo in the first block, you can use uppercase or lowercase
 characters in your hex.)
 
-Thus, to write a jump address, you have to count the number of instructions and
-operands since the first one (zero-indexed). If you don't use blank lines or
-comments, the address of a particular line is the line number minus 1.
-Otherwise, you'll have to do a sort of calculation like "line number - blank
-lines - comment lines - 1". 
+Conditional jump instructions go to address PC + OPERAND, so to jump backwards
+you must pass a negative number or the appropriate hex conversion for a 1-byte
+1's complement number. Conditional jumps are also relative to the instruction,
+not the operand. Unconditional jumps use absolute addressing. 
 
 Every instruction takes an operand, even implied addressing instructions like
 `INCX`. If you use `INCX`, you must follow it with a null byte (or any other
@@ -114,15 +113,10 @@ HLT         Halt
 INC_D       Increment place in memory
 INC_I
 INCX        Increment X register
-JEQ_D       Jump if zero flag set
-JEQ_I
-JEQ_M
-JMP_D       Unconditional jump
-JMP_I
-JMP_M
-JNE_D       Jump if zero flag not set
-JNE_I
-JNE_M
+JMP         Unconditional jump
+/* NOTE: Conditional jumps go to address PC + OPERAND
+JEQ         Jump if zero flag set
+JNE         Jump if zero flag not set
 LDA_D       Load accumulator
 LDA_I
 LDA_M
