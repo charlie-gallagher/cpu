@@ -49,7 +49,7 @@ STA_I
 	IO_START	; Place in RAM where IO starts
 	DECX
 	00h
-	JNE_M
+	JNE
 	2Ah
 
 ; Otherwise halt

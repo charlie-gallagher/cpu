@@ -50,8 +50,6 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 
 /* Read a line and copy it to contents
  *
- * Only takes at most 5 characters from each line
- * Reads a line into the contents array
  */
 int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 {
@@ -82,7 +80,7 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	}
 
 
-	// Replace first ';' with null terminator
+	// Replace first ';' in line with null terminator
 	strip_comment(line);
 
 	// Remove whitespace
@@ -136,18 +134,10 @@ int parse_line(char *line)
 		return CMP_D;
 	} else if (strcmp(line, "CMP_I") == 0) {
 		return CMP_I;
-	} else if (strcmp(line, "JEQ_D") == 0) {
-		return JEQ_D;
-	} else if (strcmp(line, "JEQ_I") == 0) {
-		return JEQ_I;
-	} else if (strcmp(line, "JEQ_M") == 0) {
-		return JEQ_M;
-	} else if (strcmp(line, "JNE_D") == 0) {
-		return JNE_D;
-	} else if (strcmp(line, "JNE_I") == 0) {
-		return JNE_I;
-	} else if (strcmp(line, "JNE_M") == 0) {
-		return JNE_M;
+	} else if (strcmp(line, "JEQ") == 0) {
+		return JEQ;
+	} else if (strcmp(line, "JNE") == 0) {
+		return JNE;
 	} else if (strcmp(line, "ADD_D") == 0) {
 		return ADD_D;
 	} else if (strcmp(line, "ADD_I") == 0) {
@@ -164,12 +154,8 @@ int parse_line(char *line)
 		return OR_D;
 	} else if (strcmp(line, "OR_I") == 0) {
 		return OR_I;
-	} else if (strcmp(line, "JMP_D") == 0) {
-		return JMP_D;
-	} else if (strcmp(line, "JMP_I") == 0) {
-		return JMP_I;
-	} else if (strcmp(line, "JMP_M") == 0) {
-		return JMP_M;
+	} else if (strcmp(line, "JMP") == 0) {
+		return JMP;
 	} else if (strcmp(line, "INCX") == 0) {
 		return INCX;
 	} else if (strcmp(line, "DECX") == 0) {
@@ -182,6 +168,8 @@ int parse_line(char *line)
 		return htoi(line);
 	} else if (line[0] == '0' || atoi(line) != 0) {
 		return atoi(line);
+	} else if (line[0] == '\'' && line[2] == '\'') {
+		return line[1];
 	} else if (line[0] == ';') {
 		return -2;
 	} else if (line[0] == '\0') {
@@ -211,7 +199,7 @@ int htoi(char *str)
 	for (i = 0; i < strlen(str); i++) {
 		c = tolower(str[i]);
 
-		// Only two characters are allowed, so no need to load math.h
+		// Only two characters are allowed, so no need to load math.
 		if (i == 0) rad = 16;
 		else if (i == 1) rad = 1;
 
@@ -239,7 +227,11 @@ void stripws(char *to , const char *from)
 
 	for (i = 0, j = 0; i < strlen(from); i++) {
 		if (from[i] == ' ' || from[i] == '\n' || from[i] == '\t') {
-			;  // Ignore whitespace
+			// If the space is preceded by an apostrophe, add it
+			if (from[i - 1] == '\'') {
+				to[j] = from[i];
+				j++;
+			}
 		} else {
 			to[j] = from[i];
 			j++;

@@ -23,8 +23,8 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define DEC_I 14
 #define CMP_D 15
 #define CMP_I 16
-#define JEQ_D 17
-#define JNE_D 18
+#define JEQ 17
+#define JNE 18
 #define ADD_D 19
 #define ADD_I 20
 #define SUB_D 21
@@ -33,15 +33,9 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define AND_I 24
 #define OR_D 25
 #define OR_I 26
-#define JMP_D 27
-#define JMP_I 28
-#define JMP_M 29
+#define JMP 27
 #define INCX 30
 #define DECX 31
-#define JEQ_I 32
-#define JEQ_M 33
-#define JNE_I 34
-#define JNE_M 35
 #define ADD_M 36
 #define SUB_M 37
 #define AND_M 38

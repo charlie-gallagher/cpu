@@ -19,6 +19,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		struct register_struct *registers, unsigned char ram[])
 {
 	unsigned char *paddr;  // Absolute address
+	signed char rel_addr = 0; // Relative value for conditional branching
 
 	switch (instruction) {
 		case LDA_D: 
@@ -119,23 +120,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			break;
 		}
-		case JMP_D:
-		{
-			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
-			printf("Unconditional jump to address %d\n", *paddr);
-			/* PC automatically incremented after instruction, so -1 */
-			registers->pc = *paddr - 1;
-			break;
-		}
-		case JMP_I:
-		{
-			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
-			printf("Unconditional jump to address %d\n", *paddr);
-			/* PC automatically incremented after instruction, so -1 */
-			registers->pc = *paddr - 1;
-			break;
-		}
-		case JMP_M:
+		case JMP:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
 			printf("Unconditional jump to address %d\n", *paddr);
@@ -143,73 +128,38 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			registers->pc = *paddr - 1;
 			break;
 		}
-		case JEQ_D:
+		case JEQ:
 		{
-			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
-			printf("Conditional jump (zero): ");
-			if ((registers->status & STATUS_ZERO_MASK) == 1) {
-				printf("Jumping to address %d\n", *paddr);
-				registers->pc = *paddr - 1;
-			} else {
-				printf("Passing without jumping\n");
-			}
-			break;
-		}
-		case JEQ_I:
-		{
-			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
-			printf("Conditional jump (zero): ");
-			if ((registers->status & STATUS_ZERO_MASK) == 1) {
-				printf("Jumping to address %d\n", *paddr);
-				registers->pc = *paddr - 1;
-			} else {
-				printf("Passing without jumping\n");
-			}
-			break;
-		}
-		case JEQ_M:
-		{
+			/* All conditional branching instructions uses the second 
+			 * byte as the number of locations to move. To the PC, the
+			 * operand is ADDED. Thus, the value is made into a signed
+			 * value.
+			 */
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
 			printf("Conditional jump (zero): ");
+
+			// Unsigned converted to signed
+			rel_addr = (signed char) *paddr;
+
 			if ((registers->status & STATUS_ZERO_MASK) == 1) {
-				printf("Jumping to address %d\n", *paddr);
-				registers->pc = *paddr - 1;
+				printf("Jumping to address %d\n", pc1 + rel_addr);
+				registers->pc += rel_addr;
 			} else {
 				printf("Passing without jumping\n");
 			}
 			break;
 		}
-		case JNE_D:
-		{
-			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
-			printf("Conditional jump (not zero): ");
-			if ((registers->status & STATUS_ZERO_MASK) != 1) {
-				printf("Jumping to address %d\n", *paddr);
-				registers->pc = *paddr - 1;
-			} else {
-				printf("Passing without jumping\n");
-			}
-			break;
-		}
-		case JNE_I:
-		{
-			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
-			printf("Conditional jump (not zero): ");
-			if ((registers->status & STATUS_ZERO_MASK) != 1) {
-				printf("Jumping to address %d\n", *paddr);
-				registers->pc = *paddr - 1;
-			} else {
-				printf("Passing without jumping\n");
-			}
-			break;
-		}
-		case JNE_M:
+		case JNE:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
 			printf("Conditional jump (not zero): ");
+
+			// Unsigned converted to signed
+			rel_addr = (signed char) *paddr;
+
 			if ((registers->status & STATUS_ZERO_MASK) != 1) {
-				printf("Jumping to address %d\n", *paddr);
-				registers->pc = *paddr - 1;
+				printf("Jumping to address %d\n", pc1 + rel_addr);
+				registers->pc += rel_addr;
 			} else {
 				printf("Passing without jumping\n");
 			}

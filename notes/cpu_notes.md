@@ -307,6 +307,54 @@ that for more information. As this develops I might incorporate more
 instructions, but I have 32 as it is, and that's a lotta switch statments. 
 
 
+# Labels
+It's been a while since I took notes in here, and the program as I planned it is
+done. Now, I want to add some fancier features such as labels and subroutines.
+A label is simply a marker for a location in memory. Also, I want to be able to
+define variables. That should be pretty easy. 
+
+I'm using the assembly simulator I found as a reference example. A label is
+attached to a location in memory, whether that's an instruction or a variable.
+The instruction may appear on the same line or on the next line as the label
+itself. I think I'll simplify that to requiring it to be before the instruction. 
+
+Now, this assembler is based on x86, and it behaves a little differently than
+the one I'm using. It doesn't have an accumulator, only GP registers. Speaking
+of which, I should really start using my GP register. 
+
+Anyway, the functioning would look something like this: 
+
+```
+label: 
+    LDA_M
+    1F
+
+hello:
+    DB
+    "Hello world"
+```
+
+When the assembler encounters the label, it adds it to an array of labels. I
+need some sort of hash table, key-value pairs. Maybe it's enough to implement
+this with a struct composed of two arrays. Let me worry about that later. First,
+the instruction `LDA_M` and its operand `1F` are loaded into memory locations 00
+and 01. Then, in location 02 goes the `DB` instruction, and the quotation marks
+indicate that a string follows. Thus, the appropriate ASCII values for 'H', 'e',
+'l', 'l', 'o', etc. are placed in locations 03-0E (or around there) and the next
+values are loaded into memory sequentially after that. 
+
+So there are two to-dos: 
+
+1. Implement label data structure
+2. Process strings sequentially
+
+I think there's nothing stopping me from setting up a label data structure, but
+I'm not set up to process strings. The assembler assumes each line can be
+converted to a single integer. What I can do is process characters like 'c' and
+convert them into ASCII. That should be easy enough. 
+
+
+
 ---
 
 Charlie Gallagher, August 2021
