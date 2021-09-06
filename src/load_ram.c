@@ -55,7 +55,8 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 {
 	char line[80];
-	int c, byte_code;
+	char tmp_line[80];
+	int byte_code;
 
 
 	while (1) {
@@ -79,14 +80,13 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 		}
 	}
 
-	/* Strip off newline */
-	for (c = 0; c < 80; c++) {
-		if (line[c] == '\n') {
-			line[c] = '\0';
-		} else if (line[c] == '\0') {
-			break;
-		}
-	}
+
+	// Replace first ';' with null terminator
+	strip_comment(line);
+
+	// Remove whitespace
+	strcpy(tmp_line, line);  // Store line in temporary spot
+	stripws(line, tmp_line); // Strip whitespace in line
 
 	printf("Line: %s\n", line);
 
@@ -177,6 +177,8 @@ int parse_line(char *line)
 		return HLT;
 	} else if (strcmp(line, "IO_START") == 0) {
 		return IO_START;
+	} else if (htoi(line) != -1) {
+		return htoi(line);
 	} else if (line[0] == '0' || atoi(line) != 0) {
 		return atoi(line);
 	} else if (line[0] == ';') {
@@ -189,3 +191,68 @@ int parse_line(char *line)
 }
 
 
+/* Converts hex string to integer
+ *
+ * If the string is longer than 1 byte (2 chars), returns -1
+ * Otherwise returns the value of the string as an integer.
+ */
+int htoi(char *str)
+{
+	int slen = strlen(str);
+	int i;
+	int value = 0;
+
+	if (slen != 3) {
+		return -1;
+	}
+
+	for (i = 0; i < slen; i++) {
+		if (str[i] <= 'f' && str[i] >= 'a') {
+			value += str[i] - 'a' + 10;
+		} else if (str[i] <= '9' && str[i] >= '0') {
+			value += str[i] - '0';
+		} else if (i == 2 && str[i] == 'h') {
+			// ignore terminal h
+			;
+		} else {
+			// Non-hex character
+			return -1;
+		}
+	}
+
+	return value;
+}
+
+/* Copies 'from' into 'to' and removes whitespace
+ */
+void stripws(char *to , const char *from) 
+{
+	int i, j;
+
+	for (i = 0, j = 0; i < strlen(from); i++) {
+		if (from[i] == ' ' || from[i] == '\n' || from[i] == '\t') {
+			;  // Ignore whitespace
+		} else {
+			to[j] = from[i];
+			j++;
+		}
+	}
+
+	to[j] = '\0';
+	printf("New line: %s\n", to);
+}
+
+
+/* Replaces first semi-colon with null string terminator
+ */
+void strip_comment(char *str)
+{
+	char *pstart_comment;
+
+
+	if ((pstart_comment = strchr(str, ';')) != NULL) {
+		printf("Comment: %s\n", pstart_comment);
+		*pstart_comment = '\0';
+	}
+
+}
