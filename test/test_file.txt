@@ -1,9 +1,9 @@
 ; Load pi into memory manually
 LDX_M
 1
-LDA_M
+	LDA_M
 48
-STA_D
+STA_D	; Store accumulator in address 90
 90
 LDA_M
 3
