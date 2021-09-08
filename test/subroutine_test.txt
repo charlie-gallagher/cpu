@@ -1,0 +1,74 @@
+; Initialize stack
+	LDX_M
+	IO_START
+	DECX
+	00h
+	TXS
+	00h
+
+; Jump to start of program
+	JMP
+	14h
+
+; Define a subroutine that prints addresses 50 to NULL byte
+	LDX_M    ; 08h
+	FFh
+	INCX    ; This resets the index to 0
+	00h
+	LDA_I
+	50h
+	STA_I
+	IO_START
+	BNE
+	-6
+	RTS   ; 12h
+	00h
+
+; Start program
+	LDX_M  ; 14h
+	00h
+	LDA_M 
+	'h'
+	STA_I
+	50h
+	INCX
+	00h
+	LDA_M 
+	'i'
+	STA_I
+	50h
+	INCX
+	00h
+	LDA_M 
+	'!'
+	STA_I
+	50h
+
+; Jump to subroutine
+	JSR
+	08h
+	
+; Load a different word and print with subroutine
+	LDX_M 
+	00h
+	LDA_M 
+	'B'
+	STA_I
+	50h
+	INCX
+	00h
+	LDA_M 
+	'r'
+	STA_I
+	50h
+	INCX
+	00h
+	LDA_M 
+	'e'
+	STA_I
+	50h
+
+	JSR
+	08h
+
+

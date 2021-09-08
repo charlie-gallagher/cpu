@@ -1,0 +1,35 @@
+; Testing the stack
+; Initialize stack
+	LDX_M
+	IO_START
+	DECX
+	00h
+	TXS
+	00h
+
+; Push a few numbers to stack
+	LDA_M
+	'h'
+	PHA
+	00h
+	LDA_M
+	'w'
+	PHA
+	00h
+
+; Pull those from the stack and write to IO
+	LDX_M
+	00h
+	PLA
+	00h
+	STA_I
+	IO_START
+	INCX
+	00h
+	PLA
+	00h
+	STA_I
+	IO_START
+	INCX
+	00h
+

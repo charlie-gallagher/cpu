@@ -7,6 +7,7 @@
 int execute_instruction(unsigned char instruction, unsigned char pc1, 
 		struct register_struct *registers, unsigned char ram[]);
 void set_zero_flag(unsigned char x, unsigned char *pstatus);
+void set_negative_flag(unsigned char x, unsigned char *pstatus);
 void set_status_flag(int set, int mask, unsigned char *pstatus);
 unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, int index);
 
@@ -40,6 +41,16 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define SUB_M 37
 #define AND_M 38
 #define OR_M 39
+#define TXS 40
+#define TXA 41
+#define TAX 42
+#define TSX 43
+#define PHA 44
+#define PHP 45
+#define PLA 46
+#define PLP 47
+#define JSR 48
+#define RTS 49
 #define HLT 0
 
 

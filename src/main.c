@@ -26,19 +26,14 @@ int main(int argc, char **argv)
 	load_ram(ram, p_cli_args);
 	print_ram(ram);
 
+	// Initialize clock
+	float clk_seconds = 1 / (float) CLK_FREQ;
+	double clk_microseconds = clk_seconds * 1000000;
 
-    	// registers
-	printf("Testing registers\n------\n");
-	printf("Instruction: %d\n", p_regis->instruction);
-	printf("Accumulator: %d\n", p_regis->accum);
-	printf("MAR: %d\n", p_regis->mar);
-	printf("Index: %d\n", p_regis->index);
-	printf("GP: %d\n", p_regis->gp);
-	printf("PC: %d\n", p_regis->pc);
-	printf("Status: %d\n", p_regis->status);
-	printf("SP: %d\n", p_regis->sp);
+	printf("Program initialized! Running program in 2 seconds...\n");
+	sleep(2);
 
-	printf("\n\n");
+
 
 
 
@@ -81,8 +76,6 @@ int main(int argc, char **argv)
 				break;
 			}
 
-			float clk_seconds = 1 / (float) CLK_FREQ;
-			double clk_microseconds = clk_seconds * 1000000;
 
 			printf("Sleeping for %0.3f seconds...\n", clk_seconds);
 			usleep(clk_microseconds);

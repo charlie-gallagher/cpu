@@ -160,6 +160,26 @@ int parse_line(char *line)
 		return INCX;
 	} else if (strcmp(line, "DECX") == 0) {
 		return DECX;
+	} else if (strcmp(line, "TAX") == 0) {
+		return TAX;
+	} else if (strcmp(line, "TXA") == 0) {
+		return TXA;
+	} else if (strcmp(line, "TSX") == 0) {
+		return TSX;
+	} else if (strcmp(line, "TXS") == 0) {
+		return TXS;
+	} else if (strcmp(line, "PHA") == 0) {
+		return PHA;
+	} else if (strcmp(line, "PHP") == 0) {
+		return PHP;
+	} else if (strcmp(line, "PLA") == 0) {
+		return PLA;
+	} else if (strcmp(line, "PLP") == 0) {
+		return PLP;
+	} else if (strcmp(line, "JSR") == 0) {
+		return JSR;
+	} else if (strcmp(line, "RTS") == 0) {
+		return RTS;
 	} else if (strcmp(line, "HLT") == 0) {
 		return HLT;
 	} else if (strcmp(line, "IO_START") == 0) {

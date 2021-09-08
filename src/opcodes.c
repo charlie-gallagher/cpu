@@ -29,7 +29,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			registers->accum = *paddr;
 
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 		    	break;
 	    	}
 		case LDA_I: 
@@ -39,7 +39,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			registers->accum = *paddr; 
 
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 		    	break;
 		}
 		case LDA_M: 
@@ -50,7 +50,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		    	registers->accum = *paddr;
 
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 			break;
 		}
 		case STA_D: 
@@ -60,7 +60,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			*paddr = registers->accum;
 
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 			break;
 		}
 		case STA_I: 
@@ -70,7 +70,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			*paddr = registers->accum;
 			
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 			break;
 		}
 		case LDX_D: 
@@ -81,7 +81,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Zero flag */
 			set_zero_flag(registers->index, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->index, STATUS_REGISTER);
 
 		    	break;
 	    	}
@@ -93,7 +93,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Zero flag */
 			set_zero_flag(registers->index, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->index, STATUS_REGISTER);
 
 			break;
 		}
@@ -105,7 +105,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Zero flag */
 			set_zero_flag(registers->index, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->index, STATUS_REGISTER);
 
 			break;
 		}
@@ -116,7 +116,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			registers->index--;
 
 			set_zero_flag(registers->index, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->index, STATUS_REGISTER);
 
 			break;
 		}
@@ -180,7 +180,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(*paddr, STATUS_REGISTER);
 			break;
 		}
 		case INC_I:
@@ -191,7 +191,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(*paddr, STATUS_REGISTER);
 			break;
 		}
 		case DEC_D:
@@ -202,7 +202,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(*paddr, STATUS_REGISTER);
 			break;
 		}
 		case DEC_I:
@@ -213,7 +213,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Zero flag */
 			set_zero_flag(*paddr, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(*paddr, STATUS_REGISTER);
 			break;
 		}
 		case CMP_D:
@@ -226,16 +226,9 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			 */
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
 			printf("Comparing value to accumulator (direct)\n");
-			if (registers->accum == *paddr) {
-				set_status_flag(1, STATUS_ZERO_MASK, STATUS_REGISTER);
-				set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
-			} else if (registers->accum < *paddr) {
-				set_status_flag(0, STATUS_ZERO_MASK, STATUS_REGISTER);
-				set_status_flag(1, STATUS_NEG_MASK, STATUS_REGISTER);
-			} else {
-				set_status_flag(0, STATUS_ZERO_MASK, STATUS_REGISTER);
-				set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
-			}
+
+			set_zero_flag(registers->accum - *paddr, STATUS_REGISTER);
+			set_negative_flag(registers->accum - *paddr, STATUS_REGISTER);
 
 			break;
 
@@ -244,16 +237,9 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("Comparing value to accumulator (indirect)\n");
-			if (registers->accum == *paddr) {
-				set_status_flag(1, STATUS_ZERO_MASK, STATUS_REGISTER);
-				set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
-			} else if (registers->accum < *paddr) {
-				set_status_flag(0, STATUS_ZERO_MASK, STATUS_REGISTER);
-				set_status_flag(1, STATUS_NEG_MASK, STATUS_REGISTER);
-			} else {
-				set_status_flag(0, STATUS_ZERO_MASK, STATUS_REGISTER);
-				set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
-			}
+
+			set_zero_flag(registers->accum - *paddr, STATUS_REGISTER);
+			set_negative_flag(registers->accum - *paddr, STATUS_REGISTER);
 			
 			break;
 		}
@@ -265,7 +251,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -277,7 +263,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -289,7 +275,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -301,7 +287,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -313,7 +299,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -325,7 +311,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -337,7 +323,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -349,7 +335,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -361,7 +347,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -373,7 +359,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -385,7 +371,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
 			break;
 		}
@@ -397,8 +383,104 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
-			set_status_flag(0, STATUS_NEG_MASK, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
 
+			break;
+		}
+		case TXS:
+		{
+			printf("Transferring index (%d) to SP\n", registers->index);
+			registers->sp = registers->index;
+			set_zero_flag(registers->sp, STATUS_REGISTER);
+			set_negative_flag(registers->sp, STATUS_REGISTER);
+			break;
+		}
+		case TSX:
+		{
+			printf("Transferring SP (%d) to index\n", registers->sp);
+			registers->index = registers->sp;
+			set_zero_flag(registers->index, STATUS_REGISTER);
+			set_negative_flag(registers->sp, STATUS_REGISTER);
+			break;
+		}
+		case TXA:
+		{
+			printf("Transferring index (%d) to accumulator\n", registers->index);
+			registers->accum = registers->index;
+			set_zero_flag(registers->accum, STATUS_REGISTER);
+			set_negative_flag(registers->sp, STATUS_REGISTER);
+			break;
+		}
+		case TAX:
+		{
+			printf("Transferring accumulator (%d) to index\n", registers->accum);
+			registers->index = registers->accum;
+			set_zero_flag(registers->index, STATUS_REGISTER);
+			set_negative_flag(registers->sp, STATUS_REGISTER);
+			break;
+		}
+		/* Instructions involving stack transfers */
+		case PHA:
+		{
+			/* Push accumulator onto stack and decrement stack pointer */
+			printf("Pushing %d onto stack at location %d\n", 
+					registers->accum, registers->sp);
+			ram[registers->sp] = registers->accum;
+			registers->sp--;
+
+			break;
+		}
+		case PHP:
+		{
+			/* Push status onto stack and decrement stack pointer */
+			printf("Pushing %d onto stack at location %d\n", 
+					registers->status, registers->sp);
+			ram[registers->sp] = registers->status;
+			registers->sp--;
+
+			break;
+		}
+		case PLA:
+		{
+			/* Pull accumulator from stack */
+			registers->sp++;
+			printf("Pulling %d into accumulator from stack\n",
+					ram[registers->sp]);
+			registers->accum = ram[registers->sp];
+
+			break;
+		}
+		case PLP:
+		{
+			/* Pull status from stack */
+			registers->sp++;
+			printf("Pulling o%o into status from stack\n",
+					ram[registers->sp]);
+			registers->status = ram[registers->sp];
+
+			break;
+		}
+		case JSR:
+		{
+			/* Jump to subroutine, putting PC on stack */
+			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Jumping to subroutine at address %02X\n", *paddr);
+
+			// Push PC onto stack
+			ram[registers->sp] = pc1;
+			registers->sp--;
+
+			// Subtracting by one to compensate for PC incrementing
+			// after execution cycle automatically
+			registers->pc = *paddr - 1;
+			break;
+		}
+		case RTS:
+		{
+			registers->sp++;
+			printf("Returning from subroutine to %02Xh\n", ram[registers->sp]);
+
+			registers->pc = ram[registers->sp] + 1; 
 			break;
 		}
 		case HLT:
@@ -430,6 +512,19 @@ void set_zero_flag(unsigned char x, unsigned char *pstatus)
 	} else {
 		printf("Clearing zero flag\n");
 		set_status_flag(0, STATUS_ZERO_MASK, pstatus);
+	}
+}
+
+void set_negative_flag(unsigned char x, unsigned char *pstatus)
+{
+	char x_signed = (signed char) x;
+
+	if (x_signed < 0) {
+		printf("Setting negative flag\n");
+		set_status_flag(1, STATUS_NEG_MASK, pstatus);
+	} else {
+		printf("Clearing negative flag\n");
+		set_status_flag(0, STATUS_NEG_MASK, pstatus);
 	}
 }
 
