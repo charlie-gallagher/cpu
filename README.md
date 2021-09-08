@@ -130,6 +130,12 @@ STA_I
 SUB_D       Subtract number from accumulator
 SUB_I
 SUB_M
+JSR         Jump to subroutine at operand address
+RTS         Return from subroutine
+PHA         Push accumulator onto stack
+PHP         Push status register onto stack
+PLA         Pull accumulator from stack
+PLP         Pull status register from stack
 ```
 
 ---
