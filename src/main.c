@@ -39,13 +39,13 @@ int main(int argc, char **argv)
 
 	while (1) {
 
-		printf("Program counter: %d\n", p_regis->pc);
+		printf("Program counter: %Xh\n", p_regis->pc);
 
 		// Fetch instruction
 		if (p_regis->instruction == INSTRUCT_PASS) {
 			printf("Instruction cycle\n");
 			p_regis->instruction = get_next_byte(ram, p_regis->pc);
-			printf("Instruction: %d\n", p_regis->instruction);
+			printf("Instruction: %Xh\n", p_regis->instruction);
 			p_regis->pc++;
 		} 
 

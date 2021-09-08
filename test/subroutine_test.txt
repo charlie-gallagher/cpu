@@ -8,7 +8,7 @@
 
 ; Jump to start of program
 	JMP
-	14h
+	20h
 
 ; Define a subroutine that prints addresses 50 to NULL byte
 	LDX_M    ; 08h
@@ -24,8 +24,22 @@
 	RTS   ; 12h
 	00h
 
-; Start program
-	LDX_M  ; 14h
+; Define a subroutine to clear the IO portion of memory
+	LDX_M   ; 14h
+	10h
+	LDA_M
+	00h
+	STA_I   ; Start of loop
+	IO_START
+	DECX
+	00h
+	BNE
+	-4
+	RTS
+	00h
+
+; Start of program
+	LDX_M  ; 20h
 	00h
 	LDA_M 
 	'h'
@@ -44,10 +58,10 @@
 	STA_I
 	50h
 
-; Jump to subroutine
+; Write to IO
 	JSR
 	08h
-	
+
 ; Load a different word and print with subroutine
 	LDX_M 
 	00h
@@ -68,6 +82,11 @@
 	STA_I
 	50h
 
+; Clear IO
+	JSR
+	14h
+
+; Print to IO
 	JSR
 	08h
 

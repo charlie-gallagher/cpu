@@ -38,7 +38,7 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 			printf("End of file: read %d lines\n", i);
 			break;
 		}
-		printf("Byte: %d\n", ram[i]);
+		printf("Byte: %Xh\n", ram[i]);
 		i++;
 	}
 
@@ -90,7 +90,7 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	printf("Line: %s\n", line);
 
 	byte_code = parse_line(line);
-	printf("Byte code conversion: %d\n", byte_code);
+	printf("Byte code conversion: %Xh\n", byte_code);
 
 	if (byte_code == -1) {
 		fprintf(stderr, "Error parsing commands\n");

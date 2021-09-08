@@ -46,7 +46,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			printf("Loading accumulator (immediate)\n");
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
-			printf("Memory value: %d\n", *paddr);
+			printf("Memory value: %Xh\n", *paddr);
 		    	registers->accum = *paddr;
 
 			set_zero_flag(registers->accum, STATUS_REGISTER);
@@ -100,7 +100,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case INCX:
 		{
 			printf("Incrementing index register\n");
-			printf("%d -> %d\n", registers->index, registers->index+1);
+			printf("%Xh -> %Xh\n", registers->index, registers->index+1);
 			registers->index++;
 
 			/* Zero flag */
@@ -112,7 +112,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case DECX:
 		{
 			printf("Decrementing index register\n");
-			printf("%d -> %d\n", registers->index, registers->index-1);
+			printf("%Xh -> %Xh\n", registers->index, registers->index-1);
 			registers->index--;
 
 			set_zero_flag(registers->index, STATUS_REGISTER);
@@ -123,7 +123,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case JMP:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
-			printf("Unconditional jump to address %d\n", *paddr);
+			printf("Unconditional jump to address %Xh\n", *paddr);
 			/* PC automatically incremented after instruction, so -1 */
 			registers->pc = *paddr - 1;
 			break;
@@ -142,7 +142,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			rel_addr = (signed char) *paddr;
 
 			if ((registers->status & STATUS_ZERO_MASK) == 1) {
-				printf("Jumping to address %d\n", pc1 + rel_addr);
+				printf("Jumping to address %Xh\n", pc1 + rel_addr);
 				registers->pc += rel_addr;
 			} else {
 				printf("Passing without jumping\n");
@@ -165,7 +165,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			}
 
 			if ((registers->status & STATUS_ZERO_MASK) != 1) {
-				printf("Jumping to address %d\n", pc1 + rel_addr);
+				printf("Jumping to address %Xh\n", pc1 + rel_addr);
 				registers->pc += rel_addr;
 			} else {
 				printf("Passing without jumping\n");
@@ -246,7 +246,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case ADD_D:
 		{
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
-			printf("Adding %d to accumulator\n", *paddr);
+			printf("Adding %Xh to accumulator\n", *paddr);
 			registers->accum += *paddr;
 
 			/* Status flags */
@@ -258,7 +258,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case ADD_I:
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
-			printf("Adding %d to accumulator\n", *paddr);
+			printf("Adding %Xh to accumulator\n", *paddr);
 			registers->accum += *paddr;
 
 			/* Status flags */
@@ -270,7 +270,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case ADD_M:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
-			printf("Adding %d to accumulator\n", *paddr);
+			printf("Adding %Xh to accumulator\n", *paddr);
 			registers->accum += *paddr;
 
 			/* Status flags */
@@ -282,7 +282,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case SUB_D:
 		{
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
-			printf("Substracting %d from accumulator\n", *paddr);
+			printf("Substracting %Xh from accumulator\n", *paddr);
 			registers->accum -= *paddr;
 
 			/* Status flags */
@@ -294,7 +294,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case SUB_I:
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
-			printf("Subtracting %d from accumulator\n", *paddr);
+			printf("Subtracting %Xh from accumulator\n", *paddr);
 			registers->accum -= *paddr;
 
 			/* Status flags */
@@ -306,7 +306,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case SUB_M:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
-			printf("Subtracting %d from accumulator\n", *paddr);
+			printf("Subtracting %Xh from accumulator\n", *paddr);
 			registers->accum -= *paddr;
 
 			/* Status flags */
@@ -389,7 +389,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case TXS:
 		{
-			printf("Transferring index (%d) to SP\n", registers->index);
+			printf("Transferring index (%Xh) to SP\n", registers->index);
 			registers->sp = registers->index;
 			set_zero_flag(registers->sp, STATUS_REGISTER);
 			set_negative_flag(registers->sp, STATUS_REGISTER);
@@ -397,7 +397,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case TSX:
 		{
-			printf("Transferring SP (%d) to index\n", registers->sp);
+			printf("Transferring SP (%Xh) to index\n", registers->sp);
 			registers->index = registers->sp;
 			set_zero_flag(registers->index, STATUS_REGISTER);
 			set_negative_flag(registers->sp, STATUS_REGISTER);
@@ -405,7 +405,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case TXA:
 		{
-			printf("Transferring index (%d) to accumulator\n", registers->index);
+			printf("Transferring index (%Xh) to accumulator\n", registers->index);
 			registers->accum = registers->index;
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_negative_flag(registers->sp, STATUS_REGISTER);
@@ -413,7 +413,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case TAX:
 		{
-			printf("Transferring accumulator (%d) to index\n", registers->accum);
+			printf("Transferring accumulator (%Xh) to index\n", registers->accum);
 			registers->index = registers->accum;
 			set_zero_flag(registers->index, STATUS_REGISTER);
 			set_negative_flag(registers->sp, STATUS_REGISTER);
@@ -423,7 +423,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case PHA:
 		{
 			/* Push accumulator onto stack and decrement stack pointer */
-			printf("Pushing %d onto stack at location %d\n", 
+			printf("Pushing %Xh onto stack at location %Xh\n", 
 					registers->accum, registers->sp);
 			ram[registers->sp] = registers->accum;
 			registers->sp--;
@@ -433,7 +433,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		case PHP:
 		{
 			/* Push status onto stack and decrement stack pointer */
-			printf("Pushing %d onto stack at location %d\n", 
+			printf("Pushing %Xh onto stack at location %Xh\n", 
 					registers->status, registers->sp);
 			ram[registers->sp] = registers->status;
 			registers->sp--;
@@ -444,7 +444,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			/* Pull accumulator from stack */
 			registers->sp++;
-			printf("Pulling %d into accumulator from stack\n",
+			printf("Pulling %Xh into accumulator from stack\n",
 					ram[registers->sp]);
 			registers->accum = ram[registers->sp];
 
@@ -467,7 +467,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			printf("Jumping to subroutine at address %02X\n", *paddr);
 
 			// Push PC onto stack
-			ram[registers->sp] = pc1;
+			ram[registers->sp] = pc1 - 1;
 			registers->sp--;
 
 			// Subtracting by one to compensate for PC incrementing
@@ -587,8 +587,8 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 		}
 	}
 
-	printf("Operand location in RAM: %d\n", addr);
-	printf("Operand value in RAM: %d\n", ram[addr]);
+	printf("Operand location in RAM: %Xh\n", addr);
+	printf("Operand value in RAM: %Xh\n", ram[addr]);
 
 	return &ram[addr];
 }
