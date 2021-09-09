@@ -94,8 +94,8 @@ The instructions use suffixes to indicate the addressing mode.
 - "I" Indirect addressing
 - "M" Immediate addressing
 
-Notably, I haven't written any instructions for the stack, so if you want that
-type of behavior you'll have to implement it in software. 
+I have tested many but not all of the instructions. Report bugs if you find
+them. 
 
 ```
 ADD_D       Add number to accumulator
@@ -141,6 +141,8 @@ TAX         ...and vice versa
 TXS         Transfer from index to stack pointer...
 TSX         ...and vice versa
 ```
+
+Report bugs to charlesjgallagher15@gmail.com.
 
 ---
 
