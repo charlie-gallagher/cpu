@@ -51,6 +51,12 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define PLP 47
 #define JSR 48
 #define RTS 49
+#define ASL 50
+#define LSR 51
+#define ROL 52
+#define ROR 53
+#define BMI 54
+#define BPL 55
 #define HLT 0
 
 

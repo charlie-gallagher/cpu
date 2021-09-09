@@ -140,7 +140,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			// Unsigned converted to signed
 			rel_addr = (signed char) *paddr;
 
-			if ((registers->status & STATUS_ZERO_MASK) == 1) {
+			if ((registers->status & STATUS_ZERO_MASK) == STATUS_ZERO_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);
 				registers->pc += rel_addr;
 			} else {
@@ -163,13 +163,35 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 				rel_addr--;
 			}
 
-			if ((registers->status & STATUS_ZERO_MASK) != 1) {
+			if ((registers->status & STATUS_ZERO_MASK) != STATUS_ZERO_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);
 				registers->pc += rel_addr;
 			} else {
 				printf("Passing without jumping\n");
 			}
 			break;
+		}
+		case BMI:
+		{
+			paddr = operand_address(IMMD_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (minus): ");
+
+			rel_addr = (signe_char) *paddr;
+
+			// Address correction
+			if (rel_addr < 0) {
+				rel_addr -= 2;
+			} else {
+				rel_addr--;
+			}
+
+			if ((registers->status & STATUS_NEG_MASK) != STATUS_NEG_MASK) {
+				printf("Jumping to address %Xh\n", pc1 + rel_addr);
+				registers->pc += rel_addr;
+			} else {
+				printf("Passing without jumping\n");
+			}
+
 		}
 		case INC_D:
 		{
