@@ -7,8 +7,11 @@
 #define INSTRUCT_PASS 0xFE
 
 #define MAJOR_VERSION 0
-#define MINOR_VERSION 1
+#define MINOR_VERSION 2
 #define PATCH 0
+
+// Uncomment for exra debugging print statements
+// #define DEBUG
 
 
 // Struct definitions
