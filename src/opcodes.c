@@ -46,7 +46,6 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			printf("Loading accumulator (immediate)\n");
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
-			printf("Memory value: %Xh\n", *paddr);
 		    	registers->accum = *paddr;
 
 			set_zero_flag(registers->accum, STATUS_REGISTER);
@@ -99,7 +98,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case INCX:
 		{
-			printf("Incrementing index register\n");
+			printf("Incrementing index register: ");
 			printf("%Xh -> %Xh\n", registers->index, registers->index+1);
 			registers->index++;
 
@@ -111,7 +110,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case DECX:
 		{
-			printf("Decrementing index register\n");
+			printf("Decrementing index register: ");
 			printf("%Xh -> %Xh\n", registers->index, registers->index-1);
 			registers->index--;
 
@@ -507,10 +506,16 @@ void set_zero_flag(unsigned char x, unsigned char *pstatus)
 {
 	/* Zero flag */
 	if (x == 0) {
+		#ifdef DEBUG
 		printf("Setting zero flag\n");
+		#endif
+
 		set_status_flag(1, STATUS_ZERO_MASK, pstatus);
 	} else {
+		#ifdef DEBUG
 		printf("Clearing zero flag\n");
+		#endif
+
 		set_status_flag(0, STATUS_ZERO_MASK, pstatus);
 	}
 }
@@ -520,10 +525,14 @@ void set_negative_flag(unsigned char x, unsigned char *pstatus)
 	char x_signed = (signed char) x;
 
 	if (x_signed < 0) {
+		#ifdef DEBUG
 		printf("Setting negative flag\n");
+		#endif
 		set_status_flag(1, STATUS_NEG_MASK, pstatus);
 	} else {
+		#ifdef DEBUG
 		printf("Clearing negative flag\n");
+		#endif
 		set_status_flag(0, STATUS_NEG_MASK, pstatus);
 	}
 }
@@ -587,8 +596,10 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 		}
 	}
 
+	#ifdef DEBUG
 	printf("Operand location in RAM: %Xh\n", addr);
 	printf("Operand value in RAM: %Xh\n", ram[addr]);
+	#endif
 
 	return &ram[addr];
 }

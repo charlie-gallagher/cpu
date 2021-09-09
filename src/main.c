@@ -39,19 +39,23 @@ int main(int argc, char **argv)
 
 	while (1) {
 
-		printf("Program counter: %Xh\n", p_regis->pc);
-
 		// Fetch instruction
 		if (p_regis->instruction == INSTRUCT_PASS) {
-			printf("Instruction cycle\n");
+			printf("Program counter (instruction): %Xh\n", p_regis->pc);
 			p_regis->instruction = get_next_byte(ram, p_regis->pc);
+
+			#ifdef DEBUG
 			printf("Instruction: %Xh\n", p_regis->instruction);
+			#endif
+
 			p_regis->pc++;
 		} 
 
 		// Fetch operand
 		else {
+			#ifdef DEBUG
 			printf("Execution cycle\n");
+			#endif
 			halt_flag = execute_instruction(p_regis->instruction, 
 					p_regis->pc, 
 					p_regis,
@@ -63,6 +67,7 @@ int main(int argc, char **argv)
 			printf("Accumulator: %d\n", p_regis->accum);
 			printf("Index: %d\n", p_regis->index);
 			printf("Zero flag: %d\n", p_regis->status & STATUS_ZERO_MASK);
+			printf("Negative flag: %d\n", p_regis->status & STATUS_NEG_MASK);
 
 			print_ram(ram);
 
@@ -179,7 +184,6 @@ void print_io(unsigned char ram[])
 {
 	int i;
 
-	printf("I/O device printing...\n");
 	for (i = IO_START; i < RAM_SIZE; i++) {
 		printf("%c", ram[i]);
 		

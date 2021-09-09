@@ -21,7 +21,9 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 		ram[i] = 0;
 	}
 
+	#ifdef DEBUG
 	printf("Loading file\n");
+	#endif
 
 	
 	/* Open file */
@@ -33,12 +35,19 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 	/* Copy file contents to array */
 	i = 0;
 	while (i < RAM_SIZE) {
+		#ifdef DEBUG
 		printf("READING FILE: line %d\n", i);
+		#endif
+
 		if (read_assembly_line(ram, i, fp) == 1) {
 			printf("End of file: read %d lines\n", i);
 			break;
 		}
+
+		#ifdef DEBUG
 		printf("Byte: %Xh\n", ram[i]);
+		#endif
+
 		i++;
 	}
 
@@ -61,7 +70,10 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	while (1) {
 		fgets(line, 80, fp);
 		if (feof(fp) != 0) {
+			#ifdef DEBUG
 			printf("End of file reached\n");
+			#endif
+
 			return 1;
 		}
 		else if (line == NULL) {
@@ -69,16 +81,22 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 			return 1;
 		}
 		else {
+			#ifdef DEBUG
 			printf("Line: %s\n", line);
+			#endif
 
 			// Remove whitespace
 			strcpy(tmp_line, line);  // Store line in temporary spot
 			stripws(line, tmp_line); // Strip whitespace in line
 
 			if (line[0] == '\0') {
+				#ifdef DEBUG
 				printf("Blank line\n");
+				#endif
 			} else if (line[0] == ';') {
+				#ifdef DEBUG
 				printf("Comment line\n");
+				#endif
 			} else {
 				break;
 			}
@@ -90,13 +108,14 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	strip_comment(line);
 
 	byte_code = parse_line(line);
+
+	#ifdef DEBUG
 	printf("Byte code conversion: %Xh\n", byte_code);
+	#endif
 
 	if (byte_code == -1) {
 		fprintf(stderr, "Error parsing commands\n");
 		exit(1);
-	} else if (byte_code == -2) {
-		printf("Skipping comment\n");
 	} else {
 		ram[i] = byte_code;
 	}
@@ -259,7 +278,10 @@ void stripws(char *to , const char *from)
 	}
 
 	to[j] = '\0';
+
+	#ifdef DEBUG
 	printf("New line after stripping white space: %s\n", to);
+	#endif
 }
 
 
@@ -274,17 +296,25 @@ void strip_comment(char *str)
 		// Check if preceeded by quote
 		if (*(pstart_comment - 1) == '\'' && 
 				*(pstart_comment + 1) == '\'') {
+
+			#ifdef DEBUG
 			printf("Found quoted semi-colon\n");
+			#endif 
 			// Find next semi-colon if any
 
 			pstart_comment = strchr(pstart_comment + 1, ';');
 			if (pstart_comment != NULL) {
+				#ifdef DEBUG
 				printf("Found comment on semi-colon line\n");
+				#endif
+
 				*pstart_comment = '\0';
 			}
 		} 
 		else {
+			#ifdef DEBUG
 			printf("Comment: %s\n", pstart_comment);
+			#endif
 			*pstart_comment = '\0';
 		}
 
