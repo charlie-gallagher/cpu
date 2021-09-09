@@ -1,0 +1,8 @@
+; First comment
+';'
+';'   ; Two semi-colons
+	
+; Next line
+	';'
+	'a'
+	'b'  ; Inline comment

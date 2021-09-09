@@ -69,7 +69,13 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 			return 1;
 		}
 		else {
-			if (line[0] == '\n') {
+			printf("Line: %s\n", line);
+
+			// Remove whitespace
+			strcpy(tmp_line, line);  // Store line in temporary spot
+			stripws(line, tmp_line); // Strip whitespace in line
+
+			if (line[0] == '\0') {
 				printf("Blank line\n");
 			} else if (line[0] == ';') {
 				printf("Comment line\n");
@@ -82,12 +88,6 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 
 	// Replace first ';' in line with null terminator
 	strip_comment(line);
-
-	// Remove whitespace
-	strcpy(tmp_line, line);  // Store line in temporary spot
-	stripws(line, tmp_line); // Strip whitespace in line
-
-	printf("Line: %s\n", line);
 
 	byte_code = parse_line(line);
 	printf("Byte code conversion: %Xh\n", byte_code);
@@ -247,8 +247,8 @@ void stripws(char *to , const char *from)
 
 	for (i = 0, j = 0; i < strlen(from); i++) {
 		if (from[i] == ' ' || from[i] == '\n' || from[i] == '\t') {
-			// If the space is preceded by an apostrophe, add it
-			if (from[i - 1] == '\'') {
+			// If the space is surrounded by an apostrophe, add it
+			if (from[i - 1] == '\'' && from[i + 1] == '\'') {
 				to[j] = from[i];
 				j++;
 			}
@@ -259,7 +259,7 @@ void stripws(char *to , const char *from)
 	}
 
 	to[j] = '\0';
-	printf("New line: %s\n", to);
+	printf("New line after stripping white space: %s\n", to);
 }
 
 
@@ -271,8 +271,26 @@ void strip_comment(char *str)
 
 
 	if ((pstart_comment = strchr(str, ';')) != NULL) {
-		printf("Comment: %s\n", pstart_comment);
-		*pstart_comment = '\0';
+		// Check if preceeded by quote
+		if (*(pstart_comment - 1) == '\'' && 
+				*(pstart_comment + 1) == '\'') {
+			printf("Found quoted semi-colon\n");
+			// Find next semi-colon if any
+
+			pstart_comment = strchr(pstart_comment + 1, ';');
+			if (pstart_comment != NULL) {
+				printf("Found comment on semi-colon line\n");
+				*pstart_comment = '\0';
+			}
+		} 
+		else {
+			printf("Comment: %s\n", pstart_comment);
+			*pstart_comment = '\0';
+		}
+
 	}
 
 }
+
+
+
