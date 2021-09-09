@@ -136,6 +136,10 @@ PHA         Push accumulator onto stack
 PHP         Push status register onto stack
 PLA         Pull accumulator from stack
 PLP         Pull status register from stack
+TXA         Transfer from index to accumulator...
+TAX         ...and vice versa
+TXS         Transfer from index to stack pointer...
+TSX         ...and vice versa
 ```
 
 ---
