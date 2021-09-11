@@ -29,17 +29,12 @@ int main(int argc, char **argv)
 		exit(-1);
 	}
 
-	printf("Starting to load labels\n");
 	load_labels(p_cli_args, p_labels);
+
 	printf("Printing labels\n--------\n");
 	print_labels(p_labels);
 
-
-	/* Temporarily return early */
-	return 0;
-	// DELETE ME ^^^^^^
-
-	load_ram(ram, p_cli_args);
+	load_ram(ram, p_cli_args, p_labels);
 	print_ram(ram);
 
 	// Initialize clock

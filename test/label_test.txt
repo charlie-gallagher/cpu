@@ -1,4 +1,7 @@
 ; Testing labels
+JMP
+first
+
 first:
 	LDA_M
 	10h
@@ -7,6 +10,12 @@ first:
 
 second:
 	LDA_M
-	20h
+	second
 	STA_D
 	IO_START
+
+third:d  ; Malformed
+JMP
+second
+
+a:

@@ -216,25 +216,23 @@ int is_label(char *line)
 			nchar++;
 		} else if (isdigit(line[i])) {
 			// Digits not allowed in label names
-			return 0;
+			break;
 		} else if (line[i] == ':') {
-			if (nchar >= 2) {
+			if (nchar >= 1) {
 				if (line[i + 1] == '\0') {
 					return nchar;
 				} else {
 					fprintf(stderr, "Malformed label name: %s\n", line);
-					return 0;
+					break;
 				}
 			} else {
-				fprintf(stderr, 
-					"Warning: too few characters in label name\n");
+				fprintf(stderr, "Error: empty label name\n");
+				break;
 			}
 		} else if (line[i] == '\0') {
-			return 0;
+			break;
 		} else {
-			// What other cases are there... symbols, I suppose
-			printf("is_label: Other case (%c)\n", line[i]);
-			return 0;
+			break;
 		}
 	}
 
@@ -248,6 +246,11 @@ void print_labels(struct labels *labels)
 
 	for (i = 0; i < 20; i++)
 	{
-		printf("%d: %s (%d)\n", i, labels->name[i], labels->addr[i]);
+		printf("%d: %s", i, labels->name[i]);
+		if (labels->name[i][0] != '\0') {
+			printf(" (%Xh)", labels->addr[i]);
+		}
+
+		putchar('\n');
 	}
 }

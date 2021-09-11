@@ -5,13 +5,14 @@
 #include "main.h"
 #include "opcodes.h"
 #include "load_ram.h"
+#include "labels.h"
 
 /* Load ram
  *
  * 	ram		Memory array acting as RAM
  * 	cli		Pointer to command line struct
  */
-int load_ram(unsigned char ram[], struct cli_struct *cli)
+int load_ram(unsigned char ram[], struct cli_struct *cli, struct labels *labels)
 {
 	FILE *fp;
 	int i;
@@ -39,7 +40,7 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 		printf("READING FILE: line %d\n", i);
 		#endif
 
-		if (read_assembly_line(ram, i, fp) == 1) {
+		if (read_assembly_line(ram, labels, i, fp) == 1) {
 			printf("End of file: read %d lines\n", i);
 			break;
 		}
@@ -60,7 +61,7 @@ int load_ram(unsigned char ram[], struct cli_struct *cli)
 /* Read a line and copy it to contents
  *
  */
-int read_assembly_line(unsigned char ram[], int i, FILE *fp)
+int read_assembly_line(unsigned char ram[], struct labels *labels, int i, FILE *fp)
 {
 	char line[80];
 	char tmp_line[80];
@@ -74,10 +75,6 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 			printf("End of file reached\n");
 			#endif
 
-			return 1;
-		}
-		else if (line == NULL) {
-			printf("Null pointer found\n");
 			return 1;
 		}
 		else {
@@ -97,6 +94,8 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 				#ifdef DEBUG
 				printf("Comment line\n");
 				#endif
+			} else if (is_label(line)) {
+				printf("Label definition line (skipping)\n");
 			} else {
 				break;
 			}
@@ -107,7 +106,7 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	// Replace first ';' in line with null terminator
 	strip_comment(line);
 
-	byte_code = parse_line(line);
+	byte_code = parse_line(line, labels);
 
 	#ifdef DEBUG
 	printf("Byte code conversion: %Xh\n", byte_code);
@@ -125,7 +124,7 @@ int read_assembly_line(unsigned char ram[], int i, FILE *fp)
 	return 0;
 }
 
-int parse_line(char *line)
+int parse_line(char *line, struct labels *labels)
 {
 	if (strcmp(line, "LDA_I") == 0) {
 		return LDA_I;
@@ -209,7 +208,10 @@ int parse_line(char *line)
 		return atoi(line);
 	} else if (line[0] == '\'' && line[2] == '\'') {
 		return line[1];
-	} else if (line[0] == ';') {
+	} else if (search_labels(line, labels) != -1) {
+		return search_labels(line, labels);
+	}
+       	else if (line[0] == ';') {
 		return -2;
 	} else if (line[0] == '\0') {
 		return 0;

@@ -8,9 +8,10 @@
 
 ; Jump to start of program
 	JMP
-	20h
+	start
 
 ; Define a subroutine that prints addresses 50 to NULL byte
+printio:
 	LDX_M    ; 08h
 	FFh
 	INCX    ; This resets the index to 0
@@ -25,6 +26,7 @@
 	00h
 
 ; Define a subroutine to clear the IO portion of memory
+cleario:
 	LDX_M   ; 14h
 	10h
 	LDA_M
@@ -39,6 +41,7 @@
 	00h
 
 ; Start of program
+start:
 	LDX_M  ; 20h
 	00h
 	LDA_M 
@@ -60,7 +63,7 @@
 
 ; Write to IO
 	JSR
-	08h
+	printio
 
 ; Load a different word and print with subroutine
 	LDX_M 
@@ -84,10 +87,10 @@
 
 ; Clear IO
 	JSR
-	14h
+	cleario
 
 ; Print to IO
 	JSR
-	08h
+	printio
 
 
