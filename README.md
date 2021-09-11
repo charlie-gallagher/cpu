@@ -39,13 +39,30 @@ This will write the first few digits of pi to the pseudo-IO device, which is
 nothing more than a block of memory reserved for such purposes. 
 
 ### Assembler
-The assembler is extremely basic. The user is responsible for writing machine
+The assembler is basic. The user is responsible for writing machine
 code instructions using mnemonics of the form "INSTRUCTION\_MODE". MODE can be
 one of "D", "I", or "M" for Direct, Indirect, and iMmediate address modes. The
 operands may be in hex (format `xxh`, e.g. `4fh`) or decimal if the hex format
 is not used. So, for example, `25` will be read as decimal, `2fh` as
 hexadecimal, and `2f` as `2`, because `atoi` is used to convert numbers.
 Alphabetical hex characters may be uppercase or lowercase. 
+
+New! Labels are now supported, and you can add up to 20 of them. The label array
+is printed at startup so you can troubleshoot if anything goes wrong. Labels are
+most useful for subroutines and jumping to the start of the program. See
+`test/subroutine_test.txt` for an example. 
+
+```
+JMP
+start
+
+; Define some subroutines and data
+mysubroutine:
+    ...
+
+start:
+    ...   ; Start of program
+```
 
 Comments begin with `;` and may be included on a line by itself or at the end of
 a line. Any part of a line after the ";" is dropped during processing. 

@@ -86,6 +86,9 @@ int read_assembly_line(unsigned char ram[], struct labels *labels, int i, FILE *
 			strcpy(tmp_line, line);  // Store line in temporary spot
 			stripws(line, tmp_line); // Strip whitespace in line
 
+			// Replace first ';' in line with null terminator
+			strip_comment(line);
+
 			if (line[0] == '\0') {
 				#ifdef DEBUG
 				printf("Blank line\n");
@@ -95,6 +98,7 @@ int read_assembly_line(unsigned char ram[], struct labels *labels, int i, FILE *
 				printf("Comment line\n");
 				#endif
 			} else if (is_label(line)) {
+				// TODO This is not stripping comments before trying to capture label
 				#ifdef DEBUG
 				printf("Label definition line (skipping)\n");
 				#endif
@@ -105,8 +109,6 @@ int read_assembly_line(unsigned char ram[], struct labels *labels, int i, FILE *
 	}
 
 
-	// Replace first ';' in line with null terminator
-	strip_comment(line);
 
 	byte_code = parse_line(line, labels);
 

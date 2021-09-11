@@ -229,7 +229,7 @@ int is_label(char *line)
 	i = nchar = 0;
 
 	for (i = 0; i < 80; i++) {
-		if (isalpha(line[i])) {
+		if (isalpha(line[i]) || line[i] == '_') {
 			nchar++;
 		} else if (isdigit(line[i])) {
 			// Digits not allowed in label names

@@ -1,14 +1,14 @@
 ; Testing labels
 JMP
-first
+first_label
 
-first:
+first_label:
 	LDA_M
 	10h
 	STA_D
 	IO_START
 
-second:
+second:    ; It should handle comments on label line
 	LDA_M
 	second
 	STA_D
