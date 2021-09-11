@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include "main.h"
 #include "load_ram.h"
 #include "labels.h"
@@ -18,6 +20,7 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 {
 	FILE *fp;
 	int i;
+	int label_status = 0;
 
 
 	printf("Loading file\n");
@@ -34,16 +37,17 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 	while (i < RAM_SIZE) {
 		printf("READING FILE: line %d\n", i);
 
-		if (read_assembly_line(ram, i, fp) == 1) {
-			printf("End of file: read %d lines\n", i);
+		label_status = read_labels_line(labels, i, fp);
+
+		if (label_status == 1) {
+			printf("End of file: read %d bytes\n", i);
 			break;
+		} else if (label_status == 2) {
+			printf("Previous line was a label, not incrementing i\n");
+		} else {
+			i++;
 		}
 
-		#ifdef DEBUG
-		printf("Byte: %Xh\n", ram[i]);
-		#endif
-
-		i++;
 	}
 
 
@@ -66,12 +70,13 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
  *   (b) Removing whitespace and comments
  *   (c) Storing labels with the correct RAM address
  *
- * Returns the index in the label structure
+ * Returns 1 for EOF, 2 if line contains a label, otherwise 0
  */
-int read_labels_line(FILE *fp, int i, struct labels *labels)
+int read_labels_line(struct labels *labels, int i, FILE *fp)
 {
 	char line[80];
 	char tmp_line[80];
+	int lab_num;
 
 	while (1) {
 		fgets(line, 79, fp);
@@ -97,9 +102,19 @@ int read_labels_line(FILE *fp, int i, struct labels *labels)
 	strip_comment(line);
 
 	if (is_label(line)) {
+		printf("Found label: %s\n", line);
 		strip_colon(line);
 		lab_num = store_label(line, i, labels);
+	
+		if (lab_num == -1) {
+			fprintf(stderr, "Error: Unable to store label\n");
+			exit(1);
+		}
+
+		return 2;
 	}
+
+	return 0;
 }
 
 
@@ -113,7 +128,7 @@ int read_labels_line(FILE *fp, int i, struct labels *labels)
  */
 int search_labels(char *str, struct labels *labels)
 {
-	int i, j;
+	int i;
 
 	for (i = 0; i < 20; i++) {
 		if (strcmp(str, labels->name[i]) == 0) {
@@ -134,11 +149,12 @@ int search_labels(char *str, struct labels *labels)
  */
 int store_label(char *name, int addr, struct labels *labels)
 {
-	int next = find_next_label_loc(struct labels *labels);
+	int next = find_next_label_loc(labels);
 
 	if (next != -1) {
 		strcpy(labels->name[next], name);
 		labels->addr[next] = addr;
+		printf("Storing label '%s' for address %d in position %d\n", name, addr, next);
 	}
 
 	return next;
@@ -158,7 +174,7 @@ int find_next_label_loc(struct labels *labels)
 {
 	int i = 0;
 
-	while (labels->name[i][1] == '\0' && i < 20) {
+	while (labels->name[i][1] != '\0' && i < 20) {
 		i++;
 	}
 
@@ -195,7 +211,7 @@ int is_label(char *line)
 	int i, nchar;
 	i = nchar = 0;
 
-	for (i; i < 80; i++) {
+	for (i = 0; i < 80; i++) {
 		if (isalpha(line[i])) {
 			nchar++;
 		} else if (isdigit(line[i])) {
@@ -206,7 +222,7 @@ int is_label(char *line)
 				if (line[i + 1] == '\0') {
 					return nchar;
 				} else {
-					fprintf("Malformed label name: %s\n", line);
+					fprintf(stderr, "Malformed label name: %s\n", line);
 					return 0;
 				}
 			} else {
@@ -220,5 +236,18 @@ int is_label(char *line)
 			printf("is_label: Other case (%c)\n", line[i]);
 			return 0;
 		}
+	}
+
+	return 0;
+}
+
+
+void print_labels(struct labels *labels)
+{
+	int i;
+
+	for (i = 0; i < 20; i++)
+	{
+		printf("%d: %s (%d)\n", i, labels->name[i], labels->addr[i]);
 	}
 }

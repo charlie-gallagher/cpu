@@ -5,6 +5,7 @@
 #include "main.h"
 #include "opcodes.h"
 #include "load_ram.h"
+#include "labels.h"
 
 
 
@@ -24,14 +25,20 @@ int main(int argc, char **argv)
 	p_regis = init_register_struct(p_regis);
 	p_labels = init_labels(p_labels);
 
+	if ((p_cli_args = parse_cli(p_cli_args, argc, argv)) == NULL) {
+		exit(-1);
+	}
+
+	printf("Starting to load labels\n");
+	load_labels(p_cli_args, p_labels);
+	printf("Printing labels\n--------\n");
+	print_labels(p_labels);
+
 
 	/* Temporarily return early */
 	return 0;
 	// DELETE ME ^^^^^^
 
-	if ((p_cli_args = parse_cli(p_cli_args, argc, argv)) == NULL) {
-		exit(-1);
-	}
 	load_ram(ram, p_cli_args);
 	print_ram(ram);
 

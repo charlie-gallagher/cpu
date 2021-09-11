@@ -1,0 +1,12 @@
+; Testing labels
+first:
+	LDA_M
+	10h
+	STA_D
+	IO_START
+
+second:
+	LDA_M
+	20h
+	STA_D
+	IO_START
