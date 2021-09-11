@@ -95,7 +95,9 @@ int read_assembly_line(unsigned char ram[], struct labels *labels, int i, FILE *
 				printf("Comment line\n");
 				#endif
 			} else if (is_label(line)) {
+				#ifdef DEBUG
 				printf("Label definition line (skipping)\n");
+				#endif
 			} else {
 				break;
 			}

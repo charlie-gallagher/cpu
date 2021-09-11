@@ -23,8 +23,6 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 	int label_status = 0;
 
 
-	printf("Loading file\n");
-
 	
 	/* Open file */
 	if ((fp = fopen(cli->input_file, "r")) == NULL) {
@@ -35,15 +33,22 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 	/* Find labels and process them */
 	i = 0;
 	while (i < RAM_SIZE) {
+		#ifdef DEBUG
 		printf("READING FILE: line %d\n", i);
+		#endif
 
 		label_status = read_labels_line(labels, i, fp);
 
 		if (label_status == 1) {
+			#ifdef DEBUG
 			printf("End of file: read %d bytes\n", i);
+			#endif
+
 			break;
 		} else if (label_status == 2) {
+			#ifdef DEBUG
 			printf("Previous line was a label, not incrementing i\n");
+			#endif
 		} else {
 			i++;
 		}
@@ -81,18 +86,26 @@ int read_labels_line(struct labels *labels, int i, FILE *fp)
 	while (1) {
 		fgets(line, 79, fp);
 		if (feof(fp) != 0) {
+			#ifdef DEBUG
 			printf("End of file reached\n");
+			#endif
 			return 1;
 		} else {
+			#ifdef DEBUG
 			printf("line: %s\n", line);
+			#endif
 
 			strcpy(tmp_line, line);
 			stripws(line, tmp_line);
 
 			if (line[0] == '\0') {
+				#ifdef DEBUG
 				printf("blank line\n");
+				#endif
 			} else if (line[0] == ';') {
+				#ifdef DEBUG
 				printf("Comment line\n");
+				#endif
 			} else {
 				break;
 			}
@@ -102,7 +115,9 @@ int read_labels_line(struct labels *labels, int i, FILE *fp)
 	strip_comment(line);
 
 	if (is_label(line)) {
+		#ifdef DEBUG
 		printf("Found label: %s\n", line);
+		#endif
 		strip_colon(line);
 		lab_num = store_label(line, i, labels);
 	
@@ -154,7 +169,9 @@ int store_label(char *name, int addr, struct labels *labels)
 	if (next != -1) {
 		strcpy(labels->name[next], name);
 		labels->addr[next] = addr;
+		#ifdef DEBUG
 		printf("Storing label '%s' for address %d in position %d\n", name, addr, next);
+		#endif
 	}
 
 	return next;
