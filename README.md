@@ -50,7 +50,8 @@ Alphabetical hex characters may be uppercase or lowercase.
 New! Labels are now supported, and you can add up to 20 of them. The label array
 is printed at startup so you can troubleshoot if anything goes wrong. Labels are
 most useful for subroutines and jumping to the start of the program. See
-`test/subroutine_test.txt` for an example. 
+`test/subroutine_test.txt` for an example. Labels are processed before the
+instructions, so they can be used before they are defined. 
 
 ```
 JMP
