@@ -173,10 +173,10 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		}
 		case BMI:
 		{
-			paddr = operand_address(IMMD_ADDR, ram, pc1, registers->index);
+			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
 			printf("Conditional jump (minus): ");
 
-			rel_addr = (signe_char) *paddr;
+			rel_addr = (signed char) *paddr;
 
 			// Address correction
 			if (rel_addr < 0) {
@@ -191,6 +191,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			} else {
 				printf("Passing without jumping\n");
 			}
+
+			break;
 
 		}
 		case INC_D:
