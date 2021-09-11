@@ -30,9 +30,16 @@ struct cli_struct {
     char *input_file;
 };
 
+struct labels {
+	char name[20][80];  // (labels.name)[0] should point to first label
+	int addr[20];
+};
+
+
 // Function definitions
 struct register_struct *init_register_struct(struct register_struct *registers);
 struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv);
+struct labels *init_labels(struct labels *labs);
 void print_help(void);
 void print_ram(unsigned char ram[]);
 void print_io(unsigned char ram[]);

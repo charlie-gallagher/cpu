@@ -15,11 +15,20 @@ int main(int argc, char **argv)
 	int halt_flag = 0;
     	struct register_struct regis;
     	struct register_struct *p_regis = &regis;
+	struct labels labels;
+	struct labels *p_labels = &labels;
     	struct cli_struct cli_args;
     	struct cli_struct *p_cli_args = &cli_args;
 
 	// Initialization
 	p_regis = init_register_struct(p_regis);
+	p_labels = init_labels(p_labels);
+
+
+	/* Temporarily return early */
+	return 0;
+	// DELETE ME ^^^^^^
+
 	if ((p_cli_args = parse_cli(p_cli_args, argc, argv)) == NULL) {
 		exit(-1);
 	}
@@ -202,5 +211,20 @@ char get_next_byte(unsigned char *ram, unsigned char pc)
 }
 
 
+/* Set all 20 arrays of 80 to nulls */
+struct labels *init_labels(struct labels *labs)
+{
+	int i, j;
 
+	for (i = 0; i < 20; i++) {
+		// Initialize names
+		for (j = 0; j < 80; j++) {
+			labs->name[i][j] = '\0';
+		}
 
+		// Initialize addresses
+		labs->addr[i] = 0;
+	}
+
+	return labs;
+}
