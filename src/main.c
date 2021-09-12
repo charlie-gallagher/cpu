@@ -10,11 +10,13 @@
 
 
 
+char tmp_file[L_tmpnam];
 
 int main(int argc, char **argv)
 {
     	unsigned char ram[RAM_SIZE];
-	char *tmp_file = tmpnam(NULL);
+	// Temporary filename string
+	tmpnam(tmp_file);
 	printf("Temporary filename: %s\n", tmp_file);
 	int halt_flag = 0;
     	struct register_struct regis;
@@ -34,6 +36,7 @@ int main(int argc, char **argv)
 
 	/* Run preprocessor */
 	p_cli_args->input_file = preprocess(tmp_file, p_cli_args->input_file);
+	atexit(remove_tmpfile);
 
 
 	/* Processing labels */
@@ -240,4 +243,9 @@ struct labels *init_labels(struct labels *labs)
 	}
 
 	return labs;
+}
+
+void remove_tmpfile(void)
+{
+	remove(tmp_file);
 }

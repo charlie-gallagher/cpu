@@ -44,5 +44,6 @@ void print_help(void);
 void print_ram(unsigned char ram[]);
 void print_io(unsigned char ram[]);
 char get_next_byte(unsigned char *ram, unsigned char pc);
+void remove_tmpfile(void);
 
 #endif
