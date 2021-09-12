@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "main.h"
-#include "load_ram.h"
 #include "labels.h"
 #include "preprocessor.h"
 
@@ -81,7 +80,6 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 int read_labels_line(struct labels *labels, int i, FILE *fp)
 {
 	char line[80];
-	char tmp_line[80];
 	int lab_num;
 
 	while (1) {
@@ -92,28 +90,10 @@ int read_labels_line(struct labels *labels, int i, FILE *fp)
 			#endif
 			return 1;
 		} else {
-			#ifdef DEBUG
-			printf("line: %s\n", line);
-			#endif
-
-			strcpy(tmp_line, line);
-			stripws(line, tmp_line);
-
-			if (line[0] == '\0') {
-				#ifdef DEBUG
-				printf("blank line\n");
-				#endif
-			} else if (line[0] == ';') {
-				#ifdef DEBUG
-				printf("Comment line\n");
-				#endif
-			} else {
-				break;
-			}
+			break;
 		}
 	}
 
-	strip_comment(line);
 
 	if (is_label(line)) {
 		#ifdef DEBUG
