@@ -246,6 +246,7 @@ void print_labels(struct labels *labels)
 {
 	int i;
 
+	printf("Defined labels\n--------\n");
 	for (i = 0; i < 20; i++)
 	{
 		printf("%d: %s", i, labels->name[i]);
@@ -255,4 +256,6 @@ void print_labels(struct labels *labels)
 
 		putchar('\n');
 	}
+
+	putchar('\n');
 }

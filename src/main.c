@@ -45,7 +45,6 @@ int main(int argc, char **argv)
 	/* Processing labels */
 	load_labels(p_cli_args, p_labels);
 
-	printf("Printing labels\n--------\n");
 	print_labels(p_labels);
 
 	/* Loading RAM with data */
@@ -196,6 +195,7 @@ void print_help(void)
 void print_ram(unsigned char ram[])
 {
 	int i;
+	printf("RAM\n--------\n");
 	for (i = 0; i < RAM_SIZE; i++) {
 		printf("%02X ", ram[i]);
 		

@@ -39,7 +39,9 @@ int load_ram(unsigned char ram[], struct cli_struct *cli, struct labels *labels)
 		#endif
 
 		if (read_assembly_line(ram, labels, i, fp) == 1) {
+			#ifdef DEBUG
 			printf("End of file: read %d lines\n", i);
+			#endif
 			break;
 		}
 

@@ -9,6 +9,7 @@ first_label:
 	IO_START
 
 second:    ; It should handle comments on label line
+third:	   ; When two labels are next to each other, both get same address
 	LDA_M
 	second
 	STA_D
