@@ -8,6 +8,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		struct register_struct *registers, unsigned char ram[]);
 void set_zero_flag(unsigned char x, unsigned char *pstatus);
 void set_negative_flag(unsigned char x, unsigned char *pstatus);
+void set_carry_flag(unsigned char x, unsigned char y, unsigned char *pstatus);
 void set_status_flag(int set, int mask, unsigned char *pstatus);
 unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, int index);
 
@@ -69,5 +70,7 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define STATUS_REGISTER &(registers->status)
 #define STATUS_ZERO_MASK 1
 #define STATUS_NEG_MASK 2
+#define STATUS_CARRY_MASK 4
+#define STATUS_OVERFLOW_MASK 8
 
 #endif

@@ -562,6 +562,26 @@ void set_negative_flag(unsigned char x, unsigned char *pstatus)
 }
 
 
+/* Set the carry flag
+ *
+ * The carry flag is set when...
+ */
+void set_carry_flag(unsigned char x, unsigned char y, unsigned char result, unsigned char *pstatus)
+{
+
+	if (x_signed < 0) {
+		#ifdef DEBUG
+		printf("Setting negative flag\n");
+		#endif
+		set_status_flag(1, STATUS_NEG_MASK, pstatus);
+	} else {
+		#ifdef DEBUG
+		printf("Clearing negative flag\n");
+		#endif
+		set_status_flag(0, STATUS_NEG_MASK, pstatus);
+	}
+}
+
 /* Set or clear a status flag
  *
  * 	set	Logical indicating whether to set the flag (1) or 
