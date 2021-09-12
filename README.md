@@ -119,7 +119,8 @@ The types of input allowed are:
 - Hexadecimal numbers (`h` suffix)
 - The `IO_START` builtin constant
 - Character constants surrounded by single quotes (e.g., `'m'` or `'c'`)
-- A label name defined elsewhere in the file
+- A label definition of the form `[A-Za-z_]+:` (e.g., `a:` or `hello_world:`)
+- A label name defined in your file
 
 Labels may include characters or underscores (`_`). They are attached to the
 address of the next RAM entry, so you won't run into trouble if you define
