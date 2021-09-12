@@ -18,14 +18,11 @@ int load_ram(unsigned char ram[], struct cli_struct *cli, struct labels *labels)
 	FILE *fp;
 	int i;
 
+
 	/* Initialize RAM array */
 	for (i = 0; i < RAM_SIZE; i++) {
 		ram[i] = 0;
 	}
-
-	#ifdef DEBUG
-	printf("Loading file\n");
-	#endif
 
 	
 	/* Open file */
@@ -70,7 +67,7 @@ int read_assembly_line(unsigned char ram[], struct labels *labels, int i, FILE *
 
 
 	while (1) {
-		fgets(line, 80, fp);
+		fgets(line, 79, fp);
 		if (feof(fp) != 0) {
 			#ifdef DEBUG
 			printf("End of file reached\n");
@@ -83,23 +80,11 @@ int read_assembly_line(unsigned char ram[], struct labels *labels, int i, FILE *
 			printf("Line: %s\n", line);
 			#endif
 
-			// Remove whitespace
-			strcpy(tmp_line, line);  // Store line in temporary spot
-			stripws(line, tmp_line); // Strip whitespace in line
+			/* Strip newline character */
+			strcpy(tmp_line, line);
+			stripws(line, tmp_line);
 
-			// Replace first ';' in line with null terminator
-			strip_comment(line);
-
-			if (line[0] == '\0') {
-				#ifdef DEBUG
-				printf("Blank line\n");
-				#endif
-			} else if (line[0] == ';') {
-				#ifdef DEBUG
-				printf("Comment line\n");
-				#endif
-			} else if (is_label(line)) {
-				// TODO This is not stripping comments before trying to capture label
+			if (is_label(line)) {
 				#ifdef DEBUG
 				printf("Label definition line (skipping)\n");
 				#endif

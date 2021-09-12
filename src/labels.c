@@ -23,6 +23,7 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 	int label_status = 0;
 
 
+	printf("Loading labels\n");
 	
 	/* Open file */
 	if ((fp = fopen(cli->input_file, "r")) == NULL) {
@@ -80,6 +81,7 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 int read_labels_line(struct labels *labels, int i, FILE *fp)
 {
 	char line[80];
+	char tmp_line[80];
 	int lab_num;
 
 	while (1) {
@@ -90,6 +92,10 @@ int read_labels_line(struct labels *labels, int i, FILE *fp)
 			#endif
 			return 1;
 		} else {
+			/* Strip newline character */
+			strcpy(tmp_line, line);
+			stripws(line, tmp_line);
+
 			break;
 		}
 	}
@@ -199,7 +205,7 @@ void strip_colon(char *line)
 }
 
 
-/* A label will be defined as at least two characters followed
+/* A label will be defined as at least one character followed
  * by a colon and (after cleaning whitespace and comments) the
  * end of string NULL terminator. 
  */
