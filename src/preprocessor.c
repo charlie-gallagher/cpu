@@ -17,7 +17,7 @@
  *
  * Returns the new file's name, or a NULL pointer on error
  */
-FILE *preprocess(char *new, char *old)
+char *preprocess(char *new, char *old)
 {
 	/* Open both files */
 	FILE *fp_new;
@@ -35,8 +35,10 @@ FILE *preprocess(char *new, char *old)
 		return NULL;
 	}
 
-	/* Actually preprocess the files line-by-line */
-	preprocess_files(fp_new, fp_old);
+	/* Actual line-by-line processing */
+	while (preprocess_files(fp_new, fp_old) != 1) {
+		;
+	}
 
 
 
@@ -59,11 +61,10 @@ int preprocess_files(FILE *fp_new, FILE *fp_old) {
 
 	while (1) {
 		fgets(line, 79, fp_old);
-		if (feof(fp) != 0) {
+		if (feof(fp_old) != 0) {
 			printf("EOF reached\n");
-			return 0;
+			return 1;
 		} else {
-			printf("Editing <%s>\n", line);
 			strcpy(tmp_line, line);
 			stripws(line, tmp_line);
 			strip_comment(line);

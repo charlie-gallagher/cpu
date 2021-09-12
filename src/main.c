@@ -6,6 +6,7 @@
 #include "opcodes.h"
 #include "load_ram.h"
 #include "labels.h"
+#include "preprocessor.h"
 
 
 
@@ -13,6 +14,8 @@
 int main(int argc, char **argv)
 {
     	unsigned char ram[RAM_SIZE];
+	char *tmp_file = tmpnam(NULL);
+	printf("Temporary filename: %s\n", tmp_file);
 	int halt_flag = 0;
     	struct register_struct regis;
     	struct register_struct *p_regis = &regis;
@@ -29,11 +32,17 @@ int main(int argc, char **argv)
 		exit(-1);
 	}
 
+	/* Run preprocessor */
+	p_cli_args->input_file = preprocess(tmp_file, p_cli_args->input_file);
+
+
+	/* Processing labels */
 	load_labels(p_cli_args, p_labels);
 
 	printf("Printing labels\n--------\n");
 	print_labels(p_labels);
 
+	/* Loading RAM with data */
 	load_ram(ram, p_cli_args, p_labels);
 	print_ram(ram);
 
@@ -102,6 +111,8 @@ int main(int argc, char **argv)
 
 	printf("Final RAM dump\n------\n");
 	print_ram(ram);
+
+	remove(tmp_file);
     
 	return 0;
 }
