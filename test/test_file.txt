@@ -1,9 +1,11 @@
-JMP   ; 00
-0Eh
+JMP   ; 00h
+start
 
 ; The text file is merely a set of bytes to load into
 ; memory, so you don't need a 'load data' instruction
-	'h'    ; 02
+hello_world:
+	00h    ; Spacer to help with structure of loop
+	'h'
 	'e'
 	'l'
 	'l'
@@ -14,15 +16,16 @@ JMP   ; 00
 	'r'
 	'l'
 	'd'
-	00h
+	00h  ; NULL terminator
 
 ; Print hello world
-	LDX_M   ; addr: 0E
-	00h
+start:
+	LDX_M
+	hello_world
 	INCX
 	00h	; no-op byte
 	LDA_I
-	01h
+	00h
 	STA_I
 	IO_START
 	BNE

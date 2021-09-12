@@ -7,12 +7,9 @@ slow.
 See `opcodes.c` for a full list of implemented opcodes, and `opcodes.h` for the
 constant definitions for all opcodes I plan on implementing.
 
-I just implemented a very basic assembler so you don't have to know the opcodes
-to use the CPU. (In otherwise, it recognizes mnemonics.) It recognizes all of
-the opcodes and some symbolic constants like `IO_START`, which is the section of
-memory that prints after each clock cycle. This is defined in `include/main.h`,
-so you can set your own value there. Currently, it's set to the last 16 bytes in
-RAM. 
+I've implemented a basic assembler that understands mnemonics, comments, and
+labels. It's not smart enough to figure out addressing modes, so these are
+included in the mnemonics explicitly. See the section "Assembler" below.
 
 
 
@@ -29,14 +26,17 @@ make
 ```
 
 ### Example
-I've included a test file, which is the best way to run this for the first time.
+I've included a few test files, which are the best way to run this for the first
+time.
 
 ```
 ./cpu test/test_file.txt
+./cpu test/subroutine_test.txt
 ```
 
-This will write the first few digits of pi to the pseudo-IO device, which is
-nothing more than a block of memory reserved for such purposes. 
+They are good examples of the structure of the programs you can write for this
+CPU. Some of the other files are for testing various features, trying to trick
+the compiler and so on. 
 
 ### Assembler
 The assembler is basic. The user is responsible for writing machine
@@ -47,11 +47,12 @@ is not used. So, for example, `25` will be read as decimal, `2fh` as
 hexadecimal, and `2f` as `2`, because `atoi` is used to convert numbers.
 Alphabetical hex characters may be uppercase or lowercase. 
 
-New! Labels are now supported, and you can add up to 20 of them. The label array
+You can add up to 20 labels per file. I can't imagine you being able to use many
+more than this when you only have 256 bytes of memory. The array of labels
 is printed at startup so you can troubleshoot if anything goes wrong. Labels are
-most useful for subroutines and jumping to the start of the program. See
-`test/subroutine_test.txt` for an example. Labels are processed before the
-instructions, so they can be used before they are defined. 
+most useful for subroutines, jumping to the start of the program, and defining
+variables. See `test/subroutine_test.txt` for an example. Labels are processed
+before the instructions, so they can be used before they are defined. 
 
 ```
 JMP
@@ -93,17 +94,47 @@ will be entered into RAM as
 3: 3fh
 ```
 
-(Note: there's no typo in the first block, you can use uppercase or lowercase
-characters in your hex.)
-
-Conditional jump instructions go to address PC + OPERAND, so to jump backwards
+Conditional branch instructions go to address PC + OPERAND, so to jump backwards
 you must pass a negative number or the appropriate hex conversion for a 1-byte
 1's complement number. Conditional jumps are also relative to the instruction,
 not the operand. Unconditional jumps use absolute addressing. 
 
+```
+LDA_M
+10
+STA_I
+IO_START
+BNE
+-4      ; Branch back to "LDA_M"
+```
+
 Every instruction takes an operand, even implied addressing instructions like
 `INCX`. If you use `INCX`, you must follow it with a null byte (or any other
 byte, but for clarity's sake use a null byte). 
+
+The types of input allowed are: 
+
+- Mnemonics (see next section for instruction set)
+- Decimal numbers (no suffix)
+- Hexadecimal numbers (`h` suffix)
+- The `IO_START` builtin constant
+- Character constants surrounded by single quotes (e.g., `'m'` or `'c'`)
+
+Labels may include characters or underscores (`_`). They are attached to the
+address of the next RAM entry, so you won't run into trouble if you define
+multiple labels for a single address. 
+
+```
+one:
+two:
+    LDA_M
+    10h
+```
+
+In this case, both `one` and `two` will be associated with address `0` in RAM,
+a.k.a. the instruction `LDA_M`. Labels of course do not affect the arrangement
+of memory in RAM. 
+
 
 ### Instruction set
 The instructions use suffixes to indicate the addressing mode.

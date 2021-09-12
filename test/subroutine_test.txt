@@ -10,14 +10,14 @@
 	JMP
 	start
 
-; Define a subroutine that prints addresses 50 to NULL byte
+; Define a subroutine that prints "text_string" variable
 printio:
 	LDX_M    ; 08h
 	FFh
 	INCX    ; This resets the index to 0
 	00h
 	LDA_I
-	50h
+	text_string
 	STA_I
 	IO_START
 	BNE
@@ -47,19 +47,19 @@ start:
 	LDA_M 
 	'h'
 	STA_I
-	50h
+	text_string
 	INCX
 	00h
 	LDA_M 
 	'i'
 	STA_I
-	50h
+	text_string
 	INCX
 	00h
 	LDA_M 
 	'!'
 	STA_I
-	50h
+	text_string
 
 ; Write to IO
 	JSR
@@ -71,19 +71,19 @@ start:
 	LDA_M 
 	'B'
 	STA_I
-	50h
+	text_string
 	INCX
 	00h
 	LDA_M 
 	'r'
 	STA_I
-	50h
+	text_string
 	INCX
 	00h
 	LDA_M 
 	'e'
 	STA_I
-	50h
+	text_string
 
 ; Clear IO
 	JSR
@@ -93,4 +93,7 @@ start:
 	JSR
 	printio
 
+HLT
 
+text_string:		; Variable for storing text string data
+	00h
