@@ -1,2 +1,11 @@
+v0.3.1
+  - Added explicit preprocessor before label processor and RAM loader
+  - Cleaned up some print statements
+  - Added the usage of a temporary file
+    - If the user exits via signal (e.g., CTRL-C), the temporary file will not be deleted
+
+v0.3.0
+  - Added label preprocessor and data structure
+
 v0.2.1
   - Added BMI (branch if minus flag set) instruction
