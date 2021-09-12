@@ -17,7 +17,10 @@ int main(int argc, char **argv)
     	unsigned char ram[RAM_SIZE];
 	// Temporary filename string
 	tmpnam(tmp_file);
+	#ifdef DEBUG
 	printf("Temporary filename: %s\n", tmp_file);
+	#endif
+
 	int halt_flag = 0;
     	struct register_struct regis;
     	struct register_struct *p_regis = &regis;

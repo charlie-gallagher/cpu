@@ -62,7 +62,9 @@ int preprocess_files(FILE *fp_new, FILE *fp_old) {
 	while (1) {
 		fgets(line, 79, fp_old);
 		if (feof(fp_old) != 0) {
+			#ifdef DEBUG
 			printf("EOF reached\n");
+			#endif
 			return 1;
 		} else {
 			strcpy(tmp_line, line);
@@ -79,7 +81,9 @@ int preprocess_files(FILE *fp_new, FILE *fp_old) {
 		}
 	}
 
+	#ifdef DEBUG
 	printf("Writing <%s> to new file\n", line);
+	#endif
 	fprintf(fp_new, "%s\n", line);
 
 	return 0;

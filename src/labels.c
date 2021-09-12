@@ -23,8 +23,6 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 	int label_status = 0;
 
 
-	printf("Loading labels\n");
-	
 	/* Open file */
 	if ((fp = fopen(cli->input_file, "r")) == NULL) {
 		fprintf(stderr, "Error opening file\n");
