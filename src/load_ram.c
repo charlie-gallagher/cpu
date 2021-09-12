@@ -6,6 +6,7 @@
 #include "opcodes.h"
 #include "load_ram.h"
 #include "labels.h"
+#include "preprocessor.h"
 
 /* Load ram
  *
@@ -264,69 +265,7 @@ int htoi(char *str)
 	return value;
 }
 
-/* Copies 'from' into 'to' and removes whitespace
- */
-void stripws(char *to , const char *from) 
-{
-	int i, j;
 
-	for (i = 0, j = 0; i < strlen(from); i++) {
-		if (from[i] == ' ' || from[i] == '\n' || from[i] == '\t') {
-			// If the space is surrounded by an apostrophe, add it
-			if (from[i - 1] == '\'' && from[i + 1] == '\'') {
-				to[j] = from[i];
-				j++;
-			}
-		} else {
-			to[j] = from[i];
-			j++;
-		}
-	}
-
-	to[j] = '\0';
-
-	#ifdef DEBUG
-	printf("New line after stripping white space: %s\n", to);
-	#endif
-}
-
-
-/* Replaces first semi-colon with null string terminator
- */
-void strip_comment(char *str)
-{
-	char *pstart_comment;
-
-
-	if ((pstart_comment = strchr(str, ';')) != NULL) {
-		// Check if preceeded by quote
-		if (*(pstart_comment - 1) == '\'' && 
-				*(pstart_comment + 1) == '\'') {
-
-			#ifdef DEBUG
-			printf("Found quoted semi-colon\n");
-			#endif 
-			// Find next semi-colon if any
-
-			pstart_comment = strchr(pstart_comment + 1, ';');
-			if (pstart_comment != NULL) {
-				#ifdef DEBUG
-				printf("Found comment on semi-colon line\n");
-				#endif
-
-				*pstart_comment = '\0';
-			}
-		} 
-		else {
-			#ifdef DEBUG
-			printf("Comment: %s\n", pstart_comment);
-			#endif
-			*pstart_comment = '\0';
-		}
-
-	}
-
-}
 
 
 
