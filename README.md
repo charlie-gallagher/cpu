@@ -193,6 +193,21 @@ TXS         Transfer from index to stack pointer...
 TSX         ...and vice versa
 ```
 
+## Known problems and deficiencies
+While this is close to the Motorolla 6502 instruction set, it is not a copy of
+it. 
+
+- Only the negative and zero status flags are implemented, but besides
+  conditional branch instructions there's no way to test these
+- The lack of carry and overflow flags means there is no way to do multi-byte
+  addition or subtraction
+- The 6502 has two registers besides the accumulator, X and Y, but I only
+  included X (index register)
+- All instructions must be 2 bytes, even if they do not take an operand
+- I haven't implemented bit shift or testing instructions (yet)
+
+
+
 Report bugs to charlesjgallagher15@gmail.com.
 
 ---
