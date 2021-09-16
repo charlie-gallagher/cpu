@@ -96,7 +96,7 @@ will be entered into RAM as
 
 Conditional branch instructions go to address PC + OPERAND, so to jump backwards
 you must pass a negative number or the appropriate hex conversion for a 1-byte
-1's complement number. Conditional jumps are also relative to the instruction,
+2's complement number. Conditional jumps are also relative to the instruction,
 not the operand. Unconditional jumps use absolute addressing. 
 
 ```
