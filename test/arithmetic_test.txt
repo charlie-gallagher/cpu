@@ -1,0 +1,67 @@
+CLC
+00h
+JMP
+start
+
+00h
+00h
+00h
+output:
+	00h
+00h
+00h
+00h
+
+; Load accumulator and add without causing carry
+start: 
+	LDA_M
+	00h
+	ADC_M
+	10h
+	STA_D
+	output
+
+; Now try adding to cause a carry
+	ADC_M
+	FFh
+	STA_D
+	output
+
+; This time, adding with carry should result in 11
+	LDA_M
+	00h
+	SEC
+	00h
+	ADC_M
+	10h
+	STA_D
+	output
+
+; Time for subtraction
+	LDA_M
+	10h
+	SEC  ; Clearing borrow (setting carry)
+	00h
+	SBC_M
+	09h
+	STA_D
+	output
+
+; And subtraction causing borrow
+	SBC_M
+	09h
+	STA_D
+	output
+
+; Finally, subtraction involving the borrow
+	LDA_M
+	11h
+	CLC	; Setting borrow (clearing carry)
+	00h
+	SBC_M
+	00h	; Subtracting zero with borrow
+	STA_D
+	output
+
+HLT
+00h

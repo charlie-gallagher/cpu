@@ -20,6 +20,8 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 {
 	unsigned char *paddr;  // Absolute address
 	signed char rel_addr = 0; // Relative value for conditional branching
+	int x, y, result; 	// For arithmetic operations
+	unsigned char carry_flag = 0;
 
 	switch (instruction) {
 		case LDA_D: 
@@ -266,75 +268,143 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			
 			break;
 		}
-		case ADD_D:
+		case ADC_D:
 		{
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
 			printf("Adding %Xh to accumulator\n", *paddr);
-			registers->accum += *paddr;
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x + y;  // Preserve bit 8
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum += *paddr + carry_flag;
+				
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(result, STATUS_REGISTER);
 
 			break;
 		}
-		case ADD_I:
+		case ADC_I:
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("Adding %Xh to accumulator\n", *paddr);
-			registers->accum += *paddr;
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x + y;  // Preserve bit 8
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum += *paddr + carry_flag;
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(result, STATUS_REGISTER);
 
 			break;
 		}
-		case ADD_M:
+		case ADC_M:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
 			printf("Adding %Xh to accumulator\n", *paddr);
-			registers->accum += *paddr;
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x + y;  // Preserve bit 8
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum += *paddr + carry_flag;
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(result, STATUS_REGISTER);
 
 			break;
 		}
-		case SUB_D:
+		case SEC:
+		{
+			printf("Setting carry flag\n");
+			set_status_flag(1, STATUS_CARRY_MASK, STATUS_REGISTER);
+			break;
+		}
+		case CLC:
+		{
+			printf("Clearing carry flag\n");
+			set_status_flag(0, STATUS_CARRY_MASK, STATUS_REGISTER);
+			break;
+		}
+		/* Subtract with carry
+		 *
+		 * It's a little indirect to set/user the carry flag properly
+		 * for this instruction. The subtraction will, as long as it
+		 * involves an integer left operand, cause bits 8-15 to 
+		 * be high. It's essentially an addition problem. The carry bit
+		 * is inverted and subtracted. The carry flag is inverted when
+		 * it's set. 
+		 *
+		 * Trouble with setting the carry bit properly. The conditions
+		 * should be this: 
+		 *
+		 * 	operand > accumulator		carry = 0
+		 * 	operand < accumulator		carry = 1
+		 * 	
+		 */
+		case SBC_D:
 		{
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
 			printf("Substracting %Xh from accumulator\n", *paddr);
-			registers->accum -= *paddr;
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x - y;  // Preserve bit 8
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum = registers->accum - *paddr - (carry_flag ^ 1);
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(~result, STATUS_REGISTER);
 
 			break;
 		}
-		case SUB_I:
+		case SBC_I:
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("Subtracting %Xh from accumulator\n", *paddr);
-			registers->accum -= *paddr;
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x - y;  // Preserve bit 8
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum = registers->accum - *paddr - (carry_flag ^ 1);
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(~result, STATUS_REGISTER);
 
 			break;
 		}
-		case SUB_M:
+		case SBC_M:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
 			printf("Subtracting %Xh from accumulator\n", *paddr);
-			registers->accum -= *paddr;
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x - y;  // Preserve bit 8
+
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum = registers->accum - *paddr - (carry_flag ^ 1);
+
+
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
 			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(~result, STATUS_REGISTER);
 
 			break;
 		}
@@ -564,23 +634,27 @@ void set_negative_flag(unsigned char x, unsigned char *pstatus)
 
 /* Set the carry flag
  *
- * The carry flag is set when...
+ * The carry flag is set when the result of an operation on two 8-bit
+ * numbers produces a 1 in the 9th bith. To handle that, I need to 
+ * convert 8-bit numbers to integers, and then check the 9th bit after
+ * the operation. 
+ *
+ * I guess that should be the domain of the case, not this function. This
+ * function will only take the masked integer (result & 0x100) and
+ * set the carry flag accordingly. The carry flag will remain set until
+ * it is cleared by the programmer or another arithmetic operation is done.
  */
-void set_carry_flag(unsigned char x, unsigned char y, unsigned char result, unsigned char *pstatus)
+void set_carry_flag(int result, unsigned char *pstatus)
 {
-
-	if (x_signed < 0) {
-		#ifdef DEBUG
-		printf("Setting negative flag\n");
-		#endif
-		set_status_flag(1, STATUS_NEG_MASK, pstatus);
+	if ((result & 0x100) == 0x100) {
+		printf("Setting carry flag\n");
+		set_status_flag(1, STATUS_CARRY_MASK, pstatus);
 	} else {
-		#ifdef DEBUG
-		printf("Clearing negative flag\n");
-		#endif
-		set_status_flag(0, STATUS_NEG_MASK, pstatus);
+		printf("Clearing carry flag\n");
+		set_status_flag(0, STATUS_CARRY_MASK, pstatus);
 	}
 }
+
 
 /* Set or clear a status flag
  *

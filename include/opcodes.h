@@ -8,7 +8,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		struct register_struct *registers, unsigned char ram[]);
 void set_zero_flag(unsigned char x, unsigned char *pstatus);
 void set_negative_flag(unsigned char x, unsigned char *pstatus);
-void set_carry_flag(unsigned char x, unsigned char y, unsigned char *pstatus);
+void set_carry_flag(int result, unsigned char *pstatus);
 void set_status_flag(int set, int mask, unsigned char *pstatus);
 unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, int index);
 
@@ -27,10 +27,12 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define CMP_I 16
 #define BEQ 17
 #define BNE 18
-#define ADD_D 19
-#define ADD_I 20
-#define SUB_D 21
-#define SUB_I 22
+#define ADC_D 19
+#define ADC_I 20
+#define ADC_M 36
+#define SBC_M 37
+#define SBC_D 21
+#define SBC_I 22
 #define AND_D 23
 #define AND_I 24
 #define OR_D 25
@@ -38,8 +40,6 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define JMP 27
 #define INCX 30
 #define DECX 31
-#define ADD_M 36
-#define SUB_M 37
 #define AND_M 38
 #define OR_M 39
 #define TXS 40
@@ -58,6 +58,8 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define ROR 53
 #define BMI 54
 #define BPL 55
+#define SEC 56
+#define CLC 57
 #define HLT 0
 
 

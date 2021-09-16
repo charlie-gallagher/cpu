@@ -148,14 +148,18 @@ int parse_line(char *line, struct labels *labels)
 		return BEQ;
 	} else if (strcmp(line, "BNE") == 0) {
 		return BNE;
-	} else if (strcmp(line, "ADD_D") == 0) {
-		return ADD_D;
-	} else if (strcmp(line, "ADD_I") == 0) {
-		return ADD_I;
-	} else if (strcmp(line, "SUB_D") == 0) {
-		return SUB_D;
-	} else if (strcmp(line, "SUB_I") == 0) {
-		return SUB_I;
+	} else if (strcmp(line, "ADC_D") == 0) {
+		return ADC_D;
+	} else if (strcmp(line, "ADC_M") == 0) {
+		return ADC_M;
+	} else if (strcmp(line, "ADC_I") == 0) {
+		return ADC_I;
+	} else if (strcmp(line, "SBC_D") == 0) {
+		return SBC_D;
+	} else if (strcmp(line, "SBC_I") == 0) {
+		return SBC_I;
+	} else if (strcmp(line, "SBC_M") == 0) {
+		return SBC_M;
 	} else if (strcmp(line, "AND_D") == 0) {
 		return AND_D;
 	} else if (strcmp(line, "AND_I") == 0) {
@@ -190,6 +194,10 @@ int parse_line(char *line, struct labels *labels)
 		return JSR;
 	} else if (strcmp(line, "RTS") == 0) {
 		return RTS;
+	} else if (strcmp(line, "CLC") == 0) {
+		return CLC;
+	} else if (strcmp(line, "SEC") == 0) {
+		return SEC;
 	} else if (strcmp(line, "HLT") == 0) {
 		return HLT;
 	} else if (strcmp(line, "IO_START") == 0) {

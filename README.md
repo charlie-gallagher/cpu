@@ -149,9 +149,9 @@ I have tested many but not all of the instructions. Report bugs if you find
 them. 
 
 ```
-ADD_D       Add number to accumulator
-ADD_I
-ADD_M
+ADC_D       Add number to accumulator
+ADC_I
+ADC_M
 AND_D       AND operand with accumulator
 AND_I
 AND_M
@@ -178,9 +178,11 @@ OR_I
 OR_M
 STA_D       Store accumulator
 STA_I
-SUB_D       Subtract number from accumulator
-SUB_I
-SUB_M
+SBC_D       Subtract number from accumulator
+SBC_I
+SBC_M
+SEC         Set carry flag
+CLC         Clear carry flag
 JSR         Jump to subroutine at operand address
 RTS         Return from subroutine
 PHA         Push accumulator onto stack
@@ -199,8 +201,6 @@ it.
 
 - Only the negative and zero status flags are implemented, but besides
   conditional branch instructions there's no way to test these
-- The lack of carry and overflow flags means there is no way to do multi-byte
-  addition or subtraction
 - The 6502 has two registers besides the accumulator, X and Y, but I only
   included X (index register)
 - All instructions must be 2 bytes, even if they do not take an operand
