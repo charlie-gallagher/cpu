@@ -1,0 +1,55 @@
+; Initialize stack and jump to start
+LDX_M
+IO_START
+DECX
+00h
+TXS
+00h
+LDX_M
+00h
+JMP
+start
+
+result:
+00h
+x:
+00h
+y:
+00h
+
+multiply:
+	LDX_D   ; Multiplier counter in X register
+	y
+	DECX	; decrement counter once
+	00h
+	CLC
+	00h
+	LDA_D
+	x
+	ADC_D	; Loop start
+	x
+	DECX
+	00h
+	BNE	; Stop branching when X = 0
+	-4
+	; Store result and return
+	STA_D
+	result
+	RTS
+	00h
+
+start:
+	; Multiply two numbers
+	LDA_M
+	32
+	STA_D
+	x
+	LDA_M
+	10
+	STA_D
+	y
+	JSR
+	multiply
+
+HLT
+00h

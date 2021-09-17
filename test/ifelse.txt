@@ -1,0 +1,55 @@
+; Initialize and jump to start
+LDX_M
+IO_START
+DECX
+00h
+LDX_M
+00h
+JMP
+start
+
+result:
+00h
+x:
+00h
+y:
+00h
+
+; If X = Y, the result is 1
+; Otherwise, the result is 0
+equal_to:
+	LDA_D
+	x
+	CMP_D
+	y
+	BEQ	; Branch if zero flag not set
+	08h
+	; Case 1: X != Y
+	LDA_M
+	0
+	STA_D
+	result
+	RTS
+	00h
+
+	; Case 2: X == Y
+	LDA_M
+	1
+	STA_D
+	result
+	RTS
+	
+
+start:
+	LDA_M
+	10h
+	STA_D
+	x
+	LDA_M
+	10h
+	STA_D
+	y
+	JSR
+	equal_to
+
+HLT

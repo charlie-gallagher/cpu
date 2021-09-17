@@ -1,3 +1,14 @@
+v0.3.3
+  - Fixed bug that caused single-character labels to be skipped
+  - Fixed a conditional branching bug that made it hard to branch
+    forward. Now both forward and backward branching are relative
+    to the instruction, not the operand. 
+
+v0.3.2
+  - Added carry flag
+  - Replaced ADD and SUB with ADC and SBC to better match the 6502 
+    instruction set
+
 v0.3.1
   - Added explicit preprocessor before label processor and RAM loader
   - Cleaned up some print statements

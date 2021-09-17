@@ -142,6 +142,9 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			// Unsigned converted to signed
 			rel_addr = (signed char) *paddr;
 
+			// Address correction
+			rel_addr -= 2;
+
 			if ((registers->status & STATUS_ZERO_MASK) == STATUS_ZERO_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);
 				registers->pc += rel_addr;
@@ -159,11 +162,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			rel_addr = (signed char) *paddr;
 
 			// Address correction
-			if (rel_addr < 0) {
-				rel_addr -= 2;
-			} else {
-				rel_addr--;
-			}
+			rel_addr -= 2;
 
 			if ((registers->status & STATUS_ZERO_MASK) != STATUS_ZERO_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);
@@ -181,11 +180,7 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			rel_addr = (signed char) *paddr;
 
 			// Address correction
-			if (rel_addr < 0) {
-				rel_addr -= 2;
-			} else {
-				rel_addr--;
-			}
+			rel_addr -= 2;
 
 			if ((registers->status & STATUS_NEG_MASK) != STATUS_NEG_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);
