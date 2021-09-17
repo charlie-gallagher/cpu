@@ -1,0 +1,45 @@
+; Just a quick program to test the compare statment
+; Initialize stack and jump to start
+LDX_M
+IO_START
+DECX
+00h
+TXS
+00h
+JMP
+start
+
+ret:
+00h
+x:
+00h
+y:
+00h
+
+add_x_y:
+	CLC
+	00h
+	LDA_D
+	x
+	ADC_D
+	y
+	STA_D
+	ret
+	RTS
+	00h
+
+
+start:
+	LDA_M
+	10h
+	STA_D
+	x
+	LDA_M
+	20h
+	STA_D
+	y
+	JSR
+	add_x_y
+
+HLT
+00h

@@ -176,7 +176,7 @@ int find_next_label_loc(struct labels *labels)
 {
 	int i = 0;
 
-	while (labels->name[i][1] != '\0' && i < 20) {
+	while (labels->name[i][0] != '\0' && i < 20) {
 		i++;
 	}
 
