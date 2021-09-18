@@ -11,7 +11,7 @@
 	start
 
 ; Define a subroutine that prints "text_string" variable
-printio:
+print_io:
 	LDX_M    ; 08h
 	FFh
 	INCX    ; This resets the index to 0
@@ -21,13 +21,13 @@ printio:
 	STA_I
 	IO_START
 	BNE
-	-6
+	-8
 	RTS   ; 12h
 	00h
 
 ; Define a subroutine to clear the IO portion of memory
-cleario:
-	LDX_M   ; 14h
+clear_io:
+	LDX_M
 	10h
 	LDA_M
 	00h
@@ -35,8 +35,8 @@ cleario:
 	IO_START
 	DECX
 	00h
-	BNE
-	-4
+	BPL
+	-6
 	RTS
 	00h
 
@@ -63,7 +63,7 @@ start:
 
 ; Write to IO
 	JSR
-	printio
+	print_io
 
 ; Load a different word and print with subroutine
 	LDX_M 
@@ -87,11 +87,11 @@ start:
 
 ; Clear IO
 	JSR
-	cleario
+	clear_io
 
 ; Print to IO
 	JSR
-	printio
+	print_io
 
 HLT
 

@@ -4,7 +4,6 @@ start
 ; The text file is merely a set of bytes to load into
 ; memory, so you don't need a 'load data' instruction
 hello_world:
-	00h    ; Spacer to help with structure of loop
 	'h'
 	'e'
 	'l'
@@ -21,16 +20,15 @@ hello_world:
 ; Print hello world
 start:
 	LDX_M
-	hello_world
+	FFh
 	INCX
 	00h	; no-op byte
 	LDA_I
-	00h
+	hello_world
 	STA_I
 	IO_START
 	BNE
-	-6   ; Conditional jumps use relative addressing
-	     ; The jump is relative to the instruction, not
-	     ; the operand
+	-8   ; Conditional jumps use relative addressing
+	     ; The jump is relative to the next byte in memory
 
 HLT

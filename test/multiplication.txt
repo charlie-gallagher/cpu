@@ -31,7 +31,7 @@ multiply:
 	DECX
 	00h
 	BNE	; Stop branching when X = 0
-	-4
+	-6
 	; Store result and return
 	STA_D
 	result
