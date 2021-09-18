@@ -60,7 +60,10 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define BPL 55
 #define SEC 56
 #define CLC 57
+#define BCS 58
+#define BCC 59
 #define HLT 0
+
 
 
 // Address modes
