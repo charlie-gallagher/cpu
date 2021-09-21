@@ -39,13 +39,13 @@ CPU. Some of the other files are for testing various features, trying to trick
 the compiler and so on. 
 
 ### Assembler
-The assembler is basic. The user is responsible for writing machine
-code instructions using mnemonics of the form "INSTRUCTION\_MODE". MODE can be
-one of "D", "I", or "M" for Direct, Indirect, and iMmediate address modes. The
-operands may be in hex (format `xxh`, e.g. `4fh`) or decimal if the hex format
-is not used. So, for example, `25` will be read as decimal, `2fh` as
-hexadecimal, and `2f` as `2`, because `atoi` is used to convert numbers.
-Alphabetical hex characters may be uppercase or lowercase. 
+The assembler is basic. The user is responsible for writing machine code
+instructions using mnemonics of the form "INSTRUCTION\_MODE". MODE can be one of
+"D", "I", "X", or "M" for Direct, Indirect, indexed with the X register, and
+iMmediate address modes. The operands may be in hex (format `xxh`, e.g. `4fh`)
+or decimal if the hex format is not used. So, for example, `25` will be read as
+decimal, `2fh` as hexadecimal, and `2f` as `2`, because `atoi` is used to
+convert numbers.  Alphabetical hex characters may be uppercase or lowercase. 
 
 You can add up to 20 labels per file. I can't imagine you being able to use many
 more than this when you only have 256 bytes of memory. The array of labels
@@ -106,7 +106,7 @@ there.
 ```
 LDA_M
 10
-STA_I
+STA_X
 IO_START
 BNE
 -6      ; Branch back to "LDA_M"
@@ -147,6 +147,7 @@ The instructions use suffixes to indicate the addressing mode.
 
 - "D" Direct, or absolute, addressing
 - "I" Indirect addressing
+- "X" Indexed addressing with the X register
 - "M" Immediate addressing
 
 I have tested many but not all of the instructions. Report bugs if you find
@@ -156,63 +157,69 @@ them.
 ADC_D       Add number to accumulator
 ADC_I
 ADC_M
+ADC_X
 AND_D       AND operand with accumulator
 AND_I
 AND_M
+AND_X
+BCC         Jump if carry clear
+BCS         Jump if carry set
+BEQ         Jump if zero flag set
+BMI         Jump if negative flag set
+BNE         Jump if zero flag not set
+BPL         Jump if negative flag clear
+CLC         Clear carry flag
 CMP_D       Compare operand to accumulator
 CMP_I
+CMP_X
+DECX        Decrement X register
 DEC_D       Decrement place in memory
 DEC_I
-DECX        Decrement X register
+DEC_X
 HLT         Halt
+INCX        Increment X register
 INC_D       Increment place in memory
 INC_I
-INCX        Increment X register
+INC_X
 JMP         Unconditional jump
-/* NOTE: Conditional jumps go to address PC + OPERAND
-BEQ         Jump if zero flag set
-BNE         Jump if zero flag not set
-BCS         Jump if carry set
-BCC         Jump if carry clear
-BPL         Jump if negative flag clear
-BMI         Jump if negative flag set
+JSR         Jump to subroutine at operand address
 LDA_D       Load accumulator
 LDA_I
 LDA_M
+LDA_X
 LDX_D       Load X register
 LDX_M
 OR_D        OR operand with accumulator
 OR_I
 OR_M
-STA_D       Store accumulator
-STA_I
-SBC_D       Subtract number from accumulator
-SBC_I
-SBC_M
-SEC         Set carry flag
-CLC         Clear carry flag
-JSR         Jump to subroutine at operand address
-RTS         Return from subroutine
+OR_X
 PHA         Push accumulator onto stack
 PHP         Push status register onto stack
 PLA         Pull accumulator from stack
 PLP         Pull status register from stack
-TXA         Transfer from index to accumulator...
+RTS         Return from subroutine
+SBC_D       Subtract number from accumulator
+SBC_I
+SBC_M
+SBC_X
+SEC         Set carry flag
+STA_D       Store accumulator
+STA_I
+STA_X
 TAX         ...and vice versa
-TXS         Transfer from index to stack pointer...
 TSX         ...and vice versa
+TXA         Transfer from index to accumulator...
+TXS         Transfer from index to stack pointer...
 ```
 
 ## Known problems and deficiencies
 While this is close to the Motorolla 6502 instruction set, it is not a copy of
 it. 
 
-- Only the negative and zero status flags are implemented, but besides
-  conditional branch instructions there's no way to test these
 - The 6502 has two registers besides the accumulator, X and Y, but I only
   included X (index register)
 - All instructions must be 2 bytes, even if they do not take an operand
-- I haven't implemented bit shift or testing instructions (yet)
+- I haven't implemented bit shift or bit testing instructions (yet)
 
 
 
