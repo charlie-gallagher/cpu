@@ -162,8 +162,6 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			// Unsigned converted to signed
 			rel_addr = (signed char) *paddr;
 
-			// Address correction
-			rel_addr -= 2;
 
 			if ((registers->status & STATUS_ZERO_MASK) == STATUS_ZERO_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);
@@ -181,9 +179,6 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			// Unsigned converted to signed
 			rel_addr = (signed char) *paddr;
 
-			// Address correction
-			rel_addr -= 2;
-
 			if ((registers->status & STATUS_ZERO_MASK) != STATUS_ZERO_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);
 				registers->pc += rel_addr;
@@ -199,8 +194,56 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			rel_addr = (signed char) *paddr;
 
-			// Address correction
-			rel_addr -= 2;
+
+			if ((registers->status & STATUS_NEG_MASK) == STATUS_NEG_MASK) {
+				printf("Jumping to address %Xh\n", pc1 + rel_addr);
+				registers->pc += rel_addr;
+			} else {
+				printf("Passing without jumping\n");
+			}
+
+			break;
+
+		}
+		case BCS: 
+		{
+			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (carry set): ");
+
+			rel_addr = (signed char) *paddr;
+
+
+			if ((registers->status & STATUS_CARRY_MASK) == STATUS_CARRY_MASK) {
+				printf("Jumping to address %Xh\n", pc1 + rel_addr);
+				registers->pc += rel_addr;
+			} else {
+				printf("Passing without jumping\n");
+			}
+			break;
+		}
+		case BCC:
+		{
+			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (carry clear): ");
+
+			rel_addr = (signed char) *paddr;
+
+
+			if ((registers->status & STATUS_CARRY_MASK) != STATUS_CARRY_MASK) {
+				printf("Jumping to address %Xh\n", pc1 + rel_addr);
+				registers->pc += rel_addr;
+			} else {
+				printf("Passing without jumping\n");
+			}
+			break;
+		}
+		case BPL:
+		{
+			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
+			printf("Conditional jump (plus): ");
+
+			rel_addr = (signed char) *paddr;
+
 
 			if ((registers->status & STATUS_NEG_MASK) != STATUS_NEG_MASK) {
 				printf("Jumping to address %Xh\n", pc1 + rel_addr);

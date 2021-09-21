@@ -148,6 +148,14 @@ int parse_line(char *line, struct labels *labels)
 		return BEQ;
 	} else if (strcmp(line, "BNE") == 0) {
 		return BNE;
+	} else if (strcmp(line, "BPL") == 0) {
+		return BPL;
+	} else if (strcmp(line, "BCS") == 0) {
+		return BCS;
+	} else if (strcmp(line, "BCC") == 0) {
+		return BCC;
+	} else if (strcmp(line, "BMI") == 0) {
+		return BMI;
 	} else if (strcmp(line, "ADC_D") == 0) {
 		return ADC_D;
 	} else if (strcmp(line, "ADC_M") == 0) {

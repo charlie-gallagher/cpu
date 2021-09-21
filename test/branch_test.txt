@@ -1,0 +1,46 @@
+; Jump to start
+JMP
+plus_start
+
+plus:
+	'p'
+	'l'
+	'u'
+	's'
+
+
+x:
+	40h
+
+plus_start:
+	LDX_M
+	03h
+	LDA_I	; Loop start
+	plus
+	STA_I
+	IO_START
+	DECX
+	00h
+	BPL
+	-8
+
+carry_start:
+	; Testing branch when carry set
+	CLC
+	00h
+	LDX_D
+	x
+	LDA_M
+	10h
+	ADC_M	; Loop start
+	10h
+	DECX
+	00h
+	BCC
+	-6
+	
+	
+
+HLT
+00h
+

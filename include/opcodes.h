@@ -69,7 +69,10 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define SBC_X 64
 #define AND_X 65
 #define OR_X 66
+#define BCS 67
+#define BCC 68
 #define HLT 0
+
 
 
 // Address modes

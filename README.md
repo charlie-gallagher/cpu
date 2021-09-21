@@ -96,8 +96,12 @@ will be entered into RAM as
 
 Conditional branch instructions go to address PC + OPERAND, so to jump backwards
 you must pass a negative number or the appropriate hex conversion for a 1-byte
-2's complement number. Conditional jumps are also relative to the instruction,
-not the operand. Unconditional jumps use absolute addressing. 
+2's complement number. Conditional jump addressing matches the addressing used
+by the 6502: the offset is relative to the next value of the PC after the
+operand of the branch instruction. In other words, to properly jump from a
+conditional branch instruction, go to the next word in memory and count from
+there. 
+
 
 ```
 LDA_M
@@ -105,7 +109,7 @@ LDA_M
 STA_I
 IO_START
 BNE
--4      ; Branch back to "LDA_M"
+-6      ; Branch back to "LDA_M"
 ```
 
 Every instruction takes an operand, even implied addressing instructions like
@@ -168,6 +172,10 @@ JMP         Unconditional jump
 /* NOTE: Conditional jumps go to address PC + OPERAND
 BEQ         Jump if zero flag set
 BNE         Jump if zero flag not set
+BCS         Jump if carry set
+BCC         Jump if carry clear
+BPL         Jump if negative flag clear
+BMI         Jump if negative flag set
 LDA_D       Load accumulator
 LDA_I
 LDA_M

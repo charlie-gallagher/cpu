@@ -91,8 +91,9 @@ int main(int argc, char **argv)
 
 			printf("Accumulator: %d\n", p_regis->accum);
 			printf("Index: %d\n", p_regis->index);
-			printf("Zero flag: %d\n", p_regis->status & STATUS_ZERO_MASK);
-			printf("Negative flag: %d\n", p_regis->status & STATUS_NEG_MASK);
+			printf("Zero flag: %d\n", (p_regis->status & STATUS_ZERO_MASK) > 0);
+			printf("Negative flag: %d\n", (p_regis->status & STATUS_NEG_MASK) > 0);
+			printf("Carry flag: %d\n", (p_regis->status & STATUS_CARRY_MASK) > 0);
 
 			print_ram(ram);
 

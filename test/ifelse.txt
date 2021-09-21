@@ -23,7 +23,7 @@ equal_to:
 	CMP_D
 	y
 	BEQ	; Branch if zero flag not set
-	08h
+	06h
 	; Case 1: X != Y
 	LDA_M
 	0
