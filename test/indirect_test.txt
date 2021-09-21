@@ -1,0 +1,77 @@
+; Jump to start
+JMP
+start
+
+p_word:		; Pointer to string to print
+	00h
+
+hello:
+	'h'
+	'e'
+	'l'
+	'l'
+	'o'
+	00h
+
+world:
+	'w'
+	'o'
+	'r'
+	'l'
+	'd'
+	00h
+
+; print_io uses p_word and prints until a NULL byte
+print_io:
+	LDX_M	; Load X register for IO
+	00h
+
+	LDA_I   ; Loop start
+	p_word
+	INCX	; Increment X register
+	00h
+	INC_D	; Increment pointer to word to be printed
+	p_word
+	STA_X
+	IO_START
+	BNE
+	-10   ; Conditional jumps use relative addressing
+	RTS
+	00h
+
+clear_io:
+	LDX_M
+	10h
+	DECX
+	00h
+	LDA_M
+	00h
+	
+	STA_X
+	IO_START
+	DECX
+	00h
+	BPL
+	-6
+	RTS
+	00h
+	
+
+start:
+	LDA_M
+	hello
+	STA_D
+	p_word
+	JSR
+	print_io
+	JSR
+	clear_io
+	LDA_M
+	world
+	STA_D
+	p_word
+	JSR
+	print_io
+
+HLT
+00h
