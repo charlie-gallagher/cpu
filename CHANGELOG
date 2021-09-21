@@ -1,3 +1,7 @@
+v0.3.4
+  - Added true indirect addressing mode, renamed indexed addressing mode to
+    "_X" mode
+
 v0.3.3
   - Fixed bug that caused single-character labels to be skipped
   - Fixed a conditional branching bug that made it hard to branch

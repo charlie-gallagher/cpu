@@ -60,6 +60,15 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define BPL 55
 #define SEC 56
 #define CLC 57
+#define STA_X 58
+#define LDA_X 59
+#define INC_X 60
+#define DEC_X 61
+#define CMP_X 62
+#define ADC_X 63
+#define SBC_X 64
+#define AND_X 65
+#define OR_X 66
 #define HLT 0
 
 
@@ -67,6 +76,7 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 #define DIR_ADDR 100
 #define INDIR_ADDR 101
 #define IMMED_ADDR 102
+#define X_ADDR 103
 
 // Status register
 #define STATUS_REGISTER &(registers->status)

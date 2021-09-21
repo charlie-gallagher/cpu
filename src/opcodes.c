@@ -54,6 +54,16 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			set_negative_flag(registers->accum, STATUS_REGISTER);
 			break;
 		}
+		case LDA_X: 
+		{
+			printf("Loading accumulator (indexed)\n");
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			registers->accum = *paddr;
+
+			set_zero_flag(registers->accum, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
+		    	break;
+	    	}
 		case STA_D: 
 		{
 			printf("Storing accumulator (direct)\n");
@@ -68,6 +78,16 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			printf("Storing acccumulator (indirect)\n");
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
+			*paddr = registers->accum;
+			
+			set_zero_flag(registers->accum, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
+			break;
+		}
+		case STA_X: 
+		{
+			printf("Storing acccumulator (indexed)\n");
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
 			*paddr = registers->accum;
 			
 			set_zero_flag(registers->accum, STATUS_REGISTER);
@@ -214,6 +234,17 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 			set_negative_flag(*paddr, STATUS_REGISTER);
 			break;
 		}
+		case INC_X:
+		{
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			printf("Incrementing value (indexed)\n");
+			(*paddr)++;
+
+			/* Zero flag */
+			set_zero_flag(*paddr, STATUS_REGISTER);
+			set_negative_flag(*paddr, STATUS_REGISTER);
+			break;
+		}
 		case DEC_D:
 		{
 			paddr = operand_address(DIR_ADDR, ram, pc1, registers->index);
@@ -229,6 +260,17 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("Decrementing value (indirect)\n");
+			(*paddr)--;
+
+			/* Zero flag */
+			set_zero_flag(*paddr, STATUS_REGISTER);
+			set_negative_flag(*paddr, STATUS_REGISTER);
+			break;
+		}
+		case DEC_X:
+		{
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			printf("Decrementing value (indexed)\n");
 			(*paddr)--;
 
 			/* Zero flag */
@@ -257,6 +299,16 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("Comparing value to accumulator (indirect)\n");
+
+			set_zero_flag(registers->accum - *paddr, STATUS_REGISTER);
+			set_negative_flag(registers->accum - *paddr, STATUS_REGISTER);
+			
+			break;
+		}
+		case CMP_X:
+		{
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			printf("Comparing value to accumulator (indexed)\n");
 
 			set_zero_flag(registers->accum - *paddr, STATUS_REGISTER);
 			set_negative_flag(registers->accum - *paddr, STATUS_REGISTER);
@@ -292,6 +344,25 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
 			registers->accum += *paddr + carry_flag;
+
+			/* Status flags */
+			set_zero_flag(registers->accum, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(result, STATUS_REGISTER);
+
+			break;
+		}
+		case ADC_X:
+		{
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			printf("Adding %Xh to accumulator (indexed)\n", *paddr);
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x + y;  // Preserve bit 8
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum += *paddr + carry_flag;
+				
 
 			/* Status flags */
 			set_zero_flag(registers->accum, STATUS_REGISTER);
@@ -382,6 +453,24 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			break;
 		}
+		case SBC_X:
+		{
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			printf("Substracting %Xh from accumulator (indexed)\n", *paddr);
+			x = registers->accum;
+			y = *paddr;
+			result = (int) x - y;  // Preserve bit 8
+
+			carry_flag = ((registers->status & STATUS_CARRY_MASK) != 0);
+			registers->accum = registers->accum - *paddr - (carry_flag ^ 1);
+
+			/* Status flags */
+			set_zero_flag(registers->accum, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
+			set_carry_flag(~result, STATUS_REGISTER);
+
+			break;
+		}
 		case SBC_M:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
@@ -427,6 +516,18 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 
 			break;
 		}
+		case AND_X:
+		{
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			printf("ANDing with accumulator (direct)\n");
+			registers->accum &= *paddr;
+
+			/* Status flags */
+			set_zero_flag(registers->accum, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
+
+			break;
+		}
 		case AND_M:
 		{
 			paddr = operand_address(IMMED_ADDR, ram, pc1, registers->index);
@@ -455,6 +556,18 @@ int execute_instruction(unsigned char instruction, unsigned char pc1,
 		{
 			paddr = operand_address(INDIR_ADDR, ram, pc1, registers->index);
 			printf("ORing with accumulator (indirect)\n");
+			registers->accum |= *paddr;
+
+			/* Status flags */
+			set_zero_flag(registers->accum, STATUS_REGISTER);
+			set_negative_flag(registers->accum, STATUS_REGISTER);
+
+			break;
+		}
+		case OR_X:
+		{
+			paddr = operand_address(X_ADDR, ram, pc1, registers->index);
+			printf("ORing with accumulator (indexed)\n");
 			registers->accum |= *paddr;
 
 			/* Status flags */
@@ -694,12 +807,17 @@ unsigned char *operand_address(int type, unsigned char ram[], unsigned char pc, 
 		}
 		case INDIR_ADDR:
 		{
-			addr = ram[pc] + index;
+			addr = ram[ram[pc]];
 			break;
 		}
 		case IMMED_ADDR:
 		{
 			addr = pc;
+			break;
+		}
+		case X_ADDR:
+		{
+			addr = ram[pc] + index;
 			break;
 		}
 		default:

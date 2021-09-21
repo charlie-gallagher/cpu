@@ -198,6 +198,24 @@ int parse_line(char *line, struct labels *labels)
 		return CLC;
 	} else if (strcmp(line, "SEC") == 0) {
 		return SEC;
+	} else if (strcmp(line, "STA_X") == 0) {
+		return STA_X;
+	} else if (strcmp(line, "LDA_X") == 0) {
+		return LDA_X;
+	} else if (strcmp(line, "INC_X") == 0) {
+		return INC_X;
+	} else if (strcmp(line, "DEC_X") == 0) {
+		return DEC_X;
+	} else if (strcmp(line, "CMP_X") == 0) {
+		return CMP_X;
+	} else if (strcmp(line, "ADC_X") == 0) {
+		return ADC_X;
+	} else if (strcmp(line, "SBC_X") == 0) {
+		return SBC_X;
+	} else if (strcmp(line, "AND_X") == 0) {
+		return AND_X;
+	} else if (strcmp(line, "OR_X") == 0) {
+		return OR_X;
 	} else if (strcmp(line, "HLT") == 0) {
 		return HLT;
 	} else if (strcmp(line, "IO_START") == 0) {
