@@ -23,9 +23,9 @@ start:
 	FFh
 	INCX
 	00h	; no-op byte
-	LDA_I
+	LDA_X
 	hello_world
-	STA_I
+	STA_X
 	IO_START
 	BNE
 	-8   ; Conditional jumps use relative addressing

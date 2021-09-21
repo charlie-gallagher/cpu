@@ -15,9 +15,9 @@ x:
 plus_start:
 	LDX_M
 	03h
-	LDA_I	; Loop start
+	LDA_X	; Loop start
 	plus
-	STA_I
+	STA_X
 	IO_START
 	DECX
 	00h

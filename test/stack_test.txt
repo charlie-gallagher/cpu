@@ -22,13 +22,13 @@
 	00h
 	PLA
 	00h
-	STA_I
+	STA_X
 	IO_START
 	INCX
 	00h
 	PLA
 	00h
-	STA_I
+	STA_X
 	IO_START
 	INCX
 	00h

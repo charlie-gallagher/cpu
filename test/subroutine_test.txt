@@ -16,9 +16,9 @@ print_io:
 	FFh
 	INCX    ; This resets the index to 0
 	00h
-	LDA_I
+	LDA_X
 	text_string
-	STA_I
+	STA_X
 	IO_START
 	BNE
 	-8
@@ -31,7 +31,7 @@ clear_io:
 	10h
 	LDA_M
 	00h
-	STA_I   ; Start of loop
+	STA_X   ; Start of loop
 	IO_START
 	DECX
 	00h
@@ -46,19 +46,19 @@ start:
 	00h
 	LDA_M 
 	'h'
-	STA_I
+	STA_X
 	text_string
 	INCX
 	00h
 	LDA_M 
 	'i'
-	STA_I
+	STA_X
 	text_string
 	INCX
 	00h
 	LDA_M 
 	'!'
-	STA_I
+	STA_X
 	text_string
 
 ; Write to IO
@@ -70,19 +70,19 @@ start:
 	00h
 	LDA_M 
 	'B'
-	STA_I
+	STA_X
 	text_string
 	INCX
 	00h
 	LDA_M 
 	'r'
-	STA_I
+	STA_X
 	text_string
 	INCX
 	00h
 	LDA_M 
 	'e'
-	STA_I
+	STA_X
 	text_string
 
 ; Clear IO
