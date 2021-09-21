@@ -1,6 +1,10 @@
-v0.3.4
+v0.3.5
   - Added true indirect addressing mode
   - Renamed indexed addressing mode to "_X" mode
+
+v0.3.4
+  - Once again updated conditional branching to better match the 6502's
+  behavior. Now instructions are relative to the next value of the PC.
 
 v0.3.3
   - Fixed bug that caused single-character labels to be skipped
