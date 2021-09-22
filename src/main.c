@@ -89,12 +89,9 @@ int main(int argc, char **argv)
 			p_regis->pc++;
 
 
-			printf("Accumulator: %d\n", p_regis->accum);
-			printf("Index: %d\n", p_regis->index);
-			printf("Zero flag: %d\n", (p_regis->status & STATUS_ZERO_MASK) > 0);
-			printf("Negative flag: %d\n", (p_regis->status & STATUS_NEG_MASK) > 0);
-			printf("Carry flag: %d\n", (p_regis->status & STATUS_CARRY_MASK) > 0);
 
+
+			print_registers(p_regis);
 			print_ram(ram);
 
 			printf("I/O Print\n------\n");
@@ -252,4 +249,17 @@ struct labels *init_labels(struct labels *labs)
 void remove_tmpfile(void)
 {
 	remove(tmp_file);
+}
+
+void print_registers(struct register_struct *registers)
+{
+
+
+	printf("A     X     Status: Z     N     C\n");
+	printf("----- -----         ----- ----- -----\n");
+	printf("%02Xh   %02Xh           %d     %d     %d\n", registers->accum, registers->index,
+					(registers->status & STATUS_ZERO_MASK) > 0,
+					(registers->status & STATUS_NEG_MASK) > 0,
+                                     	(registers->status & STATUS_CARRY_MASK) > 0);
+	putchar('\n');
 }
