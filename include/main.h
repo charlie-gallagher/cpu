@@ -20,7 +20,7 @@ struct register_struct {
     unsigned char accum;   	// Accumulator
     unsigned char mar;           // Memory address register
     unsigned char index;         // Index register
-    unsigned char gp;            // General purpose register
+    unsigned char y;            // General purpose register
     unsigned char pc;            // Program counter
     unsigned char status;        // Status register
     unsigned char sp;            // Stack pointer

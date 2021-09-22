@@ -63,7 +63,6 @@ int main(int argc, char **argv)
 
 
 	while (1) {
-
 		// Fetch instruction
 		if (p_regis->instruction == INSTRUCT_PASS) {
 			printf("Program counter (instruction): %Xh\n", p_regis->pc);
@@ -136,9 +135,9 @@ struct register_struct *init_register_struct(struct register_struct *registers)
 {
 	registers->instruction = INSTRUCT_PASS;
 	registers->accum = 0;
-	registers->mar = 0;
+	registers->mar = 0;	// Not used
 	registers->index = 0;
-	registers->gp = 0;
+	registers->y = 0;	// Not used
 	registers->pc = 0;
 	registers->status = 0;
 	registers->sp = 0;
@@ -253,7 +252,7 @@ void remove_tmpfile(void)
 
 void print_registers(struct register_struct *registers)
 {
-
+	putchar('\n');
 
 	printf("A     X     Status: Z     N     C\n");
 	printf("----- -----         ----- ----- -----\n");
