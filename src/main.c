@@ -33,12 +33,16 @@ int main(int argc, char **argv)
 	p_labels = init_labels(p_labels);
 
 	if ((p_cli_args = parse_cli(p_cli_args, argc, argv)) == NULL) {
-		exit(-1);
+		return -1;
 	}
 
 	/* Run preprocessor */
 	p_cli_args->input_file = preprocess(tmp_file, p_cli_args->input_file);
 	atexit(remove_tmpfile);
+
+	if (p_cli_args->input_file == NULL) {
+		return -1;
+	}
 
 	/* Process labels */
 	load_labels(p_cli_args, p_labels);

@@ -8,8 +8,7 @@
 
 #define MAJOR_VERSION 0
 #define MINOR_VERSION 3
-#define PATCH 5
-
+#define PATCH 6
 // Uncomment for exra debugging print statements
 // #define DEBUG
 
