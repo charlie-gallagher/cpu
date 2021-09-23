@@ -21,7 +21,6 @@ int main(int argc, char **argv)
 	printf("Temporary filename: %s\n", tmp_file);
 	#endif
 
-	int halt_flag = 0;
     	struct register_struct regis;
     	struct register_struct *p_regis = &regis;
 	struct labels labels;
@@ -41,26 +40,46 @@ int main(int argc, char **argv)
 	p_cli_args->input_file = preprocess(tmp_file, p_cli_args->input_file);
 	atexit(remove_tmpfile);
 
-
-	/* Processing labels */
+	/* Process labels */
 	load_labels(p_cli_args, p_labels);
-
 	print_labels(p_labels);
 
-	/* Loading RAM with data */
+	/* Load RAM with data */
 	load_ram(ram, p_cli_args, p_labels);
 	print_ram(ram);
 
-	// Initialize clock
-	float clk_seconds = 1 / (float) CLK_FREQ;
-	double clk_microseconds = clk_seconds * 1000000;
 
 	printf("Program initialized! Running program in 2 seconds...\n");
 	sleep(2);
 
 
+	/* Run program */
+	cpu_loop(p_regis, ram);
 
 
+	printf("Final RAM dump\n------\n");
+	print_ram(ram);
+
+	remove(tmp_file);
+    
+	return 0;
+}
+
+
+
+/* Main loop for CPU operation
+ *
+ * @param p_regis Pointer to register struct
+ * @param ram Pointer to array representing address space
+ * 
+ * @return Status code, 0 for success and non-zero for failure
+ */
+int cpu_loop(struct register_struct *p_regis, unsigned char *ram)
+{
+	int halt_flag = 0;
+	// Get clock frequency
+	float clk_seconds = 1 / (float) CLK_FREQ;
+	double clk_microseconds = clk_seconds * 1000000;
 
 	while (1) {
 		// Fetch instruction
@@ -87,9 +106,6 @@ int main(int argc, char **argv)
 			p_regis->instruction = INSTRUCT_PASS;
 			p_regis->pc++;
 
-
-
-
 			print_registers(p_regis);
 			print_ram(ram);
 
@@ -110,17 +126,8 @@ int main(int argc, char **argv)
 
 	}
 
-
-	printf("Final RAM dump\n------\n");
-	print_ram(ram);
-
-	remove(tmp_file);
-    
 	return 0;
 }
-
-
-
 
 
 
@@ -178,6 +185,8 @@ struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv)
 }
 
 
+/* Print help and exit
+ */
 void print_help(void)
 {
 	printf("Usage: cpu [-h|--help] [-v|--version] FILE\n");
@@ -221,6 +230,8 @@ void print_io(unsigned char ram[])
 }
 
 
+/* Get next byte from ram
+ */
 char get_next_byte(unsigned char *ram, unsigned char pc)
 {
 	return ram[pc];
@@ -245,11 +256,17 @@ struct labels *init_labels(struct labels *labs)
 	return labs;
 }
 
+/* Remove temporary file
+ *
+ * Removes temporary file by accessing it globally
+ */
 void remove_tmpfile(void)
 {
 	remove(tmp_file);
 }
 
+/* Print registers and status flags
+ */
 void print_registers(struct register_struct *registers)
 {
 	putchar('\n');
@@ -262,3 +279,5 @@ void print_registers(struct register_struct *registers)
                                      	(registers->status & STATUS_CARRY_MASK) > 0);
 	putchar('\n');
 }
+
+

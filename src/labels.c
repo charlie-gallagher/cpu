@@ -60,19 +60,10 @@ int load_labels(struct cli_struct *cli, struct labels *labels)
 }
 
 
-/* Read next line
+/* Read next line for label
  *
  * Reads a line from the input file and optionally copies it
  * to the labels structure. 
- *
- * I'm working this out on the fly, so this might not work out
- * great, but I think a good method is just to read one line at
- * a time until EOF. This will be a simplified version of 
- * load_ram that focuses mostly on: 
- *
- *   (a) Counting memory locations
- *   (b) Removing whitespace and comments
- *   (c) Storing labels with the correct RAM address
  *
  * Returns 1 for EOF, 2 if line contains a label, otherwise 0
  */

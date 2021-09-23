@@ -37,6 +37,7 @@ struct labels {
 
 
 // Function definitions
+int cpu_loop(struct register_struct *p_regis, unsigned char *ram);
 struct register_struct *init_register_struct(struct register_struct *registers);
 struct cli_struct *parse_cli(struct cli_struct *cl_args, int argc, char **argv);
 struct labels *init_labels(struct labels *labs);
